@@ -30,6 +30,27 @@ Class {
 	#category : #JiraPharoAPI
 }
 
+{ #category : #api }
+JiraPharoAPI >> allProjects [
+
+	self prepareZnClient.
+	znClient path: self basePath , '/project/'.
+	self rawData ifFalse: [
+		znClient contentReader: [ :entity |
+			| reader |
+			reader := NeoJSONReader on: entity contents readStream.
+			reader
+				for: JiraPharoProject
+				do: [ :mapping | mapping mapInstVars: #( key id name ) ].
+			reader
+				for: #ArrayOfJiraPharoProjects
+				customDo: [ :mapping |
+				mapping listOfElementSchema: JiraPharoProject ].
+
+			reader nextAs: #ArrayOfJiraPharoProjects ] ].
+	^ znClient get
+]
+
 { #category : #accessing }
 JiraPharoAPI >> basePath [
 
