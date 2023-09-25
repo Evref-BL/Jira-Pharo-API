@@ -217,7 +217,41 @@ JiraPharoAPI >> searchIssueWithExpand: expand fields: fields fieldsByKeys: field
 	jql ifNotNil: [ :e | dic at: #jql put: e ].
 	maxResults ifNotNil: [ :e | dic at: #maxResults put: e ].
 	startAt ifNotNil: [ :e | dic at: #startAt put: e ].
-	
+
+
+	self rawData ifFalse: [
+		znClient contentReader: [ :entity |
+			| reader |
+			reader := NeoJSONReader on: entity contents readStream.
+			reader for: JiraPharoIssue do: [ :mapping |
+				mapping mapInstVars: #( key id ).
+				mapping
+					mapProperty: 'fields'
+					getter: [ :el | "Not used" ]
+					setter: [ :pharoIssue :value |
+						value
+							at: #description
+							ifPresent: [ :desc | pharoIssue description: desc ].
+						value at: #summary ifPresent: [ :sum | pharoIssue summary: sum ].
+						value at: #labels ifPresent: [ :labs | pharoIssue labels: labs ].
+						value at: #components ifPresent: [ :cmps |
+							pharoIssue components: (cmps collect: [ :cmp |
+									 | localComponent |
+									 localComponent := JiraPharoComponent new.
+									 cmp at: #id ifPresent: [ :t | localComponent id: t ].
+									 cmp at: #name ifPresent: [ :t | localComponent name: t ].
+									 localComponent ]) ] ] ].
+			reader
+				for: #ArrayOfJiraPharoIssues
+				customDo: [ :mapping |
+				mapping listOfElementSchema: JiraPharoIssue ].
+
+			reader for: JiraPharoIssueSearchResult do: [ :mapping |
+				mapping mapInstVars: #( expand startAt maxResults total ).
+				(mapping mapInstVar: #issues) valueSchema: #ArrayOfJiraPharoIssues ].
+
+			reader nextAs: JiraPharoIssueSearchResult ] ].
+
 	znClient contents: dic.
 	^ znClient post
 ]
