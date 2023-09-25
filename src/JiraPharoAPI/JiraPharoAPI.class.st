@@ -117,7 +117,7 @@ JiraPharoAPI >> prepareZnClient [
 	self isHttps
 		ifTrue: [ znClient https ]
 		ifFalse: [ znClient http ].
-	self privateKey ifNotNil: [ :anApiKey |
+	self bearerToken ifNotNil: [ :anApiKey |
 		znClient
 			headerAt: #Authorization
 			put: 'Bearer ' , anApiKey ]
