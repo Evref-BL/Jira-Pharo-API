@@ -1,6 +1,6 @@
 # Jira-Pharo-API
 
-This is a client for the [Jira REST API](https://docs.atlassian.com/software/jira/docs/api/REST/9.11.0/).
+This is a client for the [Jira REST API](https://developer.atlassian.com/cloud/jira/software/rest/intro/).
 
 ## Installation 
 
