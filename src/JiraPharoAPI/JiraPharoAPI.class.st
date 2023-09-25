@@ -1,4 +1,8 @@
 "
+## About
+
+We try to follow the [website](https://developer.atlassian.com/cloud/jira/platform/rest/v2/intro/#about) organisation for the protocol of each method
+
 ## API
 
 - `rawData`: chane to true if you want the full json receive and no automatic Pharo converting
