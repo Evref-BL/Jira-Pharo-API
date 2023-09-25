@@ -1,4 +1,8 @@
 "
+## API
+
+- `rawData`: chane to true if you want the full json receive and no automatic Pharo converting
+
 ## Example
 
 ```st
@@ -20,7 +24,8 @@ Class {
 		'endpoint',
 		'basePath',
 		'https',
-		'bearerToken'
+		'bearerToken',
+		'rawData'
 	],
 	#category : #JiraPharoAPI
 }
@@ -79,7 +84,8 @@ JiraPharoAPI >> initialize [
 	super initialize.
 	endpoint := 'jira.atlassian.com'.
 	self basePath: '/rest/api/latest/'.
-	https := true
+	https := true.
+	self rawData: false
 ]
 
 { #category : #accessing }
@@ -92,7 +98,30 @@ JiraPharoAPI >> isHttps [
 JiraPharoAPI >> issue: issueName [
 
 	self prepareZnClient.
-	znClient path: (self basePath , '/issue/' , issueName).
+	znClient path: self basePath , '/issue/' , issueName.
+	self rawData ifFalse: [
+		znClient contentReader: [ :entity |
+			| reader |
+			reader := NeoJSONReader on: entity contents readStream.
+			reader for: JiraPharoIssue do: [ :mapping |
+				mapping mapInstVars: #( key id ).
+				mapping
+					mapProperty: 'fields'
+					getter: [ :el | "Not used" ]
+					setter: [ :pharoIssue :value |
+						value
+							at: #description
+							ifPresent: [ :desc | pharoIssue description: desc ].
+						value at: #summary ifPresent: [ :sum | pharoIssue summary: sum ].
+						value at: #labels ifPresent: [ :labs | pharoIssue labels: labs ].
+						value at: #components ifPresent: [ :cmps |
+							pharoIssue components: (cmps collect: [ :cmp |
+									 | localComponent |
+									 localComponent := JiraPharoComponent new.
+									 cmp at: #id ifPresent: [ :t | localComponent id: t ].
+									 cmp at: #name ifPresent: [ :t | localComponent name: t ].
+									 localComponent ]) ] ] ].
+			reader nextAs: JiraPharoIssue ] ].
 	^ znClient get
 ]
 
@@ -122,4 +151,16 @@ JiraPharoAPI >> prepareZnClient [
 		znClient
 			headerAt: #Authorization
 			put: 'Bearer ' , anApiKey ]
+]
+
+{ #category : #accessing }
+JiraPharoAPI >> rawData [
+
+	^ rawData
+]
+
+{ #category : #accessing }
+JiraPharoAPI >> rawData: anObject [
+
+	rawData := anObject
 ]
