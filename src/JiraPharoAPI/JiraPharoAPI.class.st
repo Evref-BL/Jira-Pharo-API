@@ -153,6 +153,22 @@ JiraPharoAPI >> prepareZnClient [
 			put: 'Bearer ' , anApiKey ]
 ]
 
+{ #category : #api }
+JiraPharoAPI >> project: projectId [
+
+	self prepareZnClient.
+	znClient path: self basePath , '/project/' , projectId asString.
+	self rawData ifFalse: [
+		znClient contentReader: [ :entity |
+			| reader |
+			reader := NeoJSONReader on: entity contents readStream.
+			reader
+				for: JiraPharoProject
+				do: [ :mapping | mapping mapInstVars: #( key id name ) ].
+			reader nextAs: JiraPharoProject ] ].
+	^ znClient get
+]
+
 { #category : #accessing }
 JiraPharoAPI >> rawData [
 

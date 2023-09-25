@@ -25,5 +25,8 @@ BaselineOfJiraPharoAPI >> defineGroups: spec [
 { #category : #baselines }
 BaselineOfJiraPharoAPI >> definePackages: spec [
 
-	spec package: 'JiraPharoAPI'
+	spec
+		package: 'JiraPharoAPI'
+		with: [ spec requires: #( 'JiraPharoAPI-Model' ) ].
+	spec package: 'JiraPharoAPI-Model'
 ]
