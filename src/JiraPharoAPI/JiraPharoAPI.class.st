@@ -115,8 +115,9 @@ JiraPharoAPI >> isHttps [
 	^ https
 ]
 
-{ #category : #api }
+{ #category : #'api - issue' }
 JiraPharoAPI >> issue: issueName [
+	"https://developer.atlassian.com/cloud/jira/platform/rest/v2/api-group-issues/#api-rest-api-2-issue-issueidorkey-get"
 
 	self prepareZnClient.
 	znClient path: self basePath , '/issue/' , issueName.
@@ -200,4 +201,23 @@ JiraPharoAPI >> rawData [
 JiraPharoAPI >> rawData: anObject [
 
 	rawData := anObject
+]
+
+{ #category : #'api - issue search' }
+JiraPharoAPI >> searchIssueWithExpand: expand fields: fields fieldsByKeys: fieldsByKeys jql: jql maxResults: maxResults startAt: startAt [
+	"https://developer.atlassian.com/cloud/jira/platform/rest/v2/api-group-issue-search/#api-rest-api-2-search-post"
+
+	| dic |
+	self prepareZnClient.
+	znClient path: self basePath , '/search'.
+	dic := Dictionary new.
+	expand ifNotNil: [ :e | dic at: #expand put: e ].
+	fields ifNotNil: [ :e | dic at: #fields put: e ].
+	fieldsByKeys ifNotNil: [ :e | dic at: #fieldsByKeys put: e ].
+	jql ifNotNil: [ :e | dic at: #jql put: e ].
+	maxResults ifNotNil: [ :e | dic at: #maxResults put: e ].
+	startAt ifNotNil: [ :e | dic at: #startAt put: e ].
+	
+	znClient contents: dic.
+	^ znClient post
 ]
