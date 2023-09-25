@@ -113,6 +113,7 @@ JiraPharoAPI >> prepareZnClient [
 
 	znClient := ZnClient new.
 	znClient host: self endpoint.
+	znClient forJsonREST.
 	self port ifNotNil: [ :specifiedPort | znClient port: specifiedPort ].
 	self isHttps
 		ifTrue: [ znClient https ]
