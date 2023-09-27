@@ -7,7 +7,8 @@ Class {
 		'summary',
 		'labels',
 		'key',
-		'id'
+		'id',
+		'created'
 	],
 	#category : #'JiraPharoAPI-Model'
 }
@@ -22,6 +23,18 @@ JiraPharoIssue >> components [
 JiraPharoIssue >> components: anObject [
 
 	components := anObject
+]
+
+{ #category : #accessing }
+JiraPharoIssue >> created [
+
+	^ created
+]
+
+{ #category : #accessing }
+JiraPharoIssue >> created: anObject [
+
+	created := anObject
 ]
 
 { #category : #accessing }

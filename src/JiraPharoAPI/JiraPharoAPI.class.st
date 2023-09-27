@@ -238,12 +238,17 @@ JiraPharoAPI >> searchIssueWithExpand: expand fields: fields fieldsByKeys: field
 							ifPresent: [ :desc | pharoIssue description: desc ].
 						value at: #summary ifPresent: [ :sum | pharoIssue summary: sum ].
 						value at: #labels ifPresent: [ :labs | pharoIssue labels: labs ].
+						value
+							at: #created
+							ifPresent: [ :dateString |
+							pharoIssue created: (Date fromString: dateString) ].
 						value at: #components ifPresent: [ :cmps |
 							pharoIssue components: (cmps collect: [ :cmp |
 									 | localComponent |
 									 localComponent := JiraPharoComponent new.
 									 cmp at: #id ifPresent: [ :t | localComponent id: t ].
 									 cmp at: #name ifPresent: [ :t | localComponent name: t ].
+
 									 localComponent ]) ] ] ].
 			reader
 				for: #ArrayOfJiraPharoIssues
