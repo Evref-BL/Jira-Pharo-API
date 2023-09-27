@@ -8,7 +8,8 @@ Class {
 		'labels',
 		'key',
 		'id',
-		'created'
+		'created',
+		'issueType'
 	],
 	#category : #'JiraPharoAPI-Model'
 }
@@ -59,6 +60,18 @@ JiraPharoIssue >> id [
 JiraPharoIssue >> id: anObject [
 
 	id := anObject
+]
+
+{ #category : #accessing }
+JiraPharoIssue >> issueType [
+
+	^ issueType
+]
+
+{ #category : #accessing }
+JiraPharoIssue >> issueType: anObject [
+
+	issueType := anObject
 ]
 
 { #category : #accessing }

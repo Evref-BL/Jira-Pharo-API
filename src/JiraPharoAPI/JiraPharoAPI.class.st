@@ -91,6 +91,52 @@ JiraPharoAPI >> bearerToken: anObject [
 	bearerToken := anObject
 ]
 
+{ #category : #'api - issue search' }
+JiraPharoAPI >> configureMappingForJiraIssue: mapping [
+
+	mapping mapInstVars: #( key id ).
+
+	mapping
+		mapProperty: 'fields'
+		getter: [ :el | "Not used" ]
+		setter: [ :pharoIssue :value |
+			value
+				at: #description
+				ifPresent: [ :desc | pharoIssue description: desc ].
+			value at: #summary ifPresent: [ :sum | pharoIssue summary: sum ].
+			value at: #labels ifPresent: [ :labs | pharoIssue labels: labs ].
+			value at: #issuetype ifPresent: [ :issuetype |
+				| createdIssueType |
+				createdIssueType := JiraPharoIssueType new.
+				pharoIssue issueType: createdIssueType.
+				issuetype at: #id ifPresent: [ :t | createdIssueType id: t ].
+				issuetype
+					at: #description
+					ifPresent: [ :t | createdIssueType description: t ].
+				issuetype
+					at: #iconUrl
+					ifPresent: [ :t | createdIssueType iconUrl: t ].
+				issuetype at: #name ifPresent: [ :t | createdIssueType name: t ].
+				issuetype
+					at: #subtask
+					ifPresent: [ :t | createdIssueType subtask: t ].
+				issuetype
+					at: #avatarId
+					ifPresent: [ :t | createdIssueType avatarId: t ] ].
+			value
+				at: #created
+				ifPresent: [ :dateString |
+				pharoIssue created: (Date fromString: dateString) ].
+			value at: #components ifPresent: [ :cmps |
+				pharoIssue components: (cmps collect: [ :cmp |
+						 | localComponent |
+						 localComponent := JiraPharoComponent new.
+						 cmp at: #id ifPresent: [ :t | localComponent id: t ].
+						 cmp at: #name ifPresent: [ :t | localComponent name: t ].
+
+						 localComponent ]) ] ]
+]
+
 { #category : #accessing }
 JiraPharoAPI >> endpoint [
 
@@ -129,24 +175,9 @@ JiraPharoAPI >> issue: issueName [
 		znClient contentReader: [ :entity |
 			| reader |
 			reader := NeoJSONReader on: entity contents readStream.
-			reader for: JiraPharoIssue do: [ :mapping |
-				mapping mapInstVars: #( key id ).
-				mapping
-					mapProperty: 'fields'
-					getter: [ :el | "Not used" ]
-					setter: [ :pharoIssue :value |
-						value
-							at: #description
-							ifPresent: [ :desc | pharoIssue description: desc ].
-						value at: #summary ifPresent: [ :sum | pharoIssue summary: sum ].
-						value at: #labels ifPresent: [ :labs | pharoIssue labels: labs ].
-						value at: #components ifPresent: [ :cmps |
-							pharoIssue components: (cmps collect: [ :cmp |
-									 | localComponent |
-									 localComponent := JiraPharoComponent new.
-									 cmp at: #id ifPresent: [ :t | localComponent id: t ].
-									 cmp at: #name ifPresent: [ :t | localComponent name: t ].
-									 localComponent ]) ] ] ].
+			reader
+				for: JiraPharoIssue
+				do: [ :mapping | self configureMappingForJiraIssue: mapping ].
 			reader nextAs: JiraPharoIssue ] ].
 	^ znClient get
 ]
@@ -227,29 +258,9 @@ JiraPharoAPI >> searchIssueWithExpand: expand fields: fields fieldsByKeys: field
 		znClient contentReader: [ :entity |
 			| reader |
 			reader := NeoJSONReader on: entity contents readStream.
-			reader for: JiraPharoIssue do: [ :mapping |
-				mapping mapInstVars: #( key id ).
-				mapping
-					mapProperty: 'fields'
-					getter: [ :el | "Not used" ]
-					setter: [ :pharoIssue :value |
-						value
-							at: #description
-							ifPresent: [ :desc | pharoIssue description: desc ].
-						value at: #summary ifPresent: [ :sum | pharoIssue summary: sum ].
-						value at: #labels ifPresent: [ :labs | pharoIssue labels: labs ].
-						value
-							at: #created
-							ifPresent: [ :dateString |
-							pharoIssue created: (Date fromString: dateString) ].
-						value at: #components ifPresent: [ :cmps |
-							pharoIssue components: (cmps collect: [ :cmp |
-									 | localComponent |
-									 localComponent := JiraPharoComponent new.
-									 cmp at: #id ifPresent: [ :t | localComponent id: t ].
-									 cmp at: #name ifPresent: [ :t | localComponent name: t ].
-
-									 localComponent ]) ] ] ].
+			reader
+				for: JiraPharoIssue
+				do: [ :mapping | self configureMappingForJiraIssue: mapping ].
 			reader
 				for: #ArrayOfJiraPharoIssues
 				customDo: [ :mapping |
