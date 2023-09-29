@@ -105,7 +105,8 @@ JiraPharoAPI >> configureMappingForJiraIssue: mapping [
 				ifPresent: [ :desc | pharoIssue description: desc ].
 			value
 				at: #timespent
-				ifPresent: [ :ti | pharoIssue timespent: ti seconds ].
+				ifPresent: [ :ti |
+				ti ifNotNil: [ pharoIssue timespent: ti seconds ] ].
 			value at: #summary ifPresent: [ :sum | pharoIssue summary: sum ].
 			value at: #labels ifPresent: [ :labs | pharoIssue labels: labs ].
 			value at: #issuetype ifPresent: [ :issuetype |
