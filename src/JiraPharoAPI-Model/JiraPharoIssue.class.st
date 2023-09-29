@@ -9,7 +9,8 @@ Class {
 		'key',
 		'id',
 		'created',
-		'issueType'
+		'issueType',
+		'timespent'
 	],
 	#category : #'JiraPharoAPI-Model'
 }
@@ -108,4 +109,16 @@ JiraPharoIssue >> summary [
 JiraPharoIssue >> summary: anObject [
 
 	summary := anObject
+]
+
+{ #category : #accessing }
+JiraPharoIssue >> timespent [
+
+	^ timespent
+]
+
+{ #category : #accessing }
+JiraPharoIssue >> timespent: anObject [
+
+	timespent := anObject
 ]
