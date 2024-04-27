@@ -5,7 +5,7 @@ We try to follow the [website](https://developer.atlassian.com/cloud/jira/platfo
 
 ## API
 
-- `rawData`: chane to true if you want the full json receive and no automatic Pharo converting
+- `rawData`: change to true if you want the full json receive and no automatic Pharo converting
 
 ## Example
 
@@ -20,21 +20,24 @@ jpAPI issue: '<issue name>'.
 ```
 "
 Class {
-	#name : #JiraPharoAPI,
-	#superclass : #Object,
+	#name : 'JiraPharoAPI',
+	#superclass : 'Object',
 	#instVars : [
 		'znClient',
 		'port',
 		'endpoint',
+		'user',
 		'basePath',
 		'https',
+		'apiToken',
 		'bearerToken',
 		'rawData'
 	],
-	#category : #JiraPharoAPI
+	#category : 'JiraPharoAPI',
+	#package : 'JiraPharoAPI'
 }
 
-{ #category : #api }
+{ #category : 'api' }
 JiraPharoAPI >> allProjects [
 
 	self prepareZnClient.
@@ -55,43 +58,55 @@ JiraPharoAPI >> allProjects [
 	^ znClient get
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
+JiraPharoAPI >> apiToken [
+
+	^ apiToken
+]
+
+{ #category : 'accessing' }
+JiraPharoAPI >> apiToken: anObject [
+
+	apiToken := anObject
+]
+
+{ #category : 'accessing' }
 JiraPharoAPI >> basePath [
 
 	^ basePath
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JiraPharoAPI >> basePath: anObject [
 
 	basePath := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JiraPharoAPI >> beHttp [
 
 	https := false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JiraPharoAPI >> beHttps [
 
 	https := true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JiraPharoAPI >> bearerToken [
 
 	^ bearerToken
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JiraPharoAPI >> bearerToken: anObject [
 
 	bearerToken := anObject
 ]
 
-{ #category : #'api - issue search' }
+{ #category : 'api - issue search' }
 JiraPharoAPI >> configureMappingForJiraIssue: mapping [
 
 	mapping mapInstVars: #( key id ).
@@ -141,19 +156,19 @@ JiraPharoAPI >> configureMappingForJiraIssue: mapping [
 						 localComponent ]) ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JiraPharoAPI >> endpoint [
 
 	^ endpoint
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JiraPharoAPI >> endpoint: anObject [
 
 	endpoint := anObject
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 JiraPharoAPI >> initialize [
 
 	super initialize.
@@ -163,13 +178,13 @@ JiraPharoAPI >> initialize [
 	self rawData: false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JiraPharoAPI >> isHttps [
 
 	^ https
 ]
 
-{ #category : #'api - issue' }
+{ #category : 'api - issue' }
 JiraPharoAPI >> issue: issueName [
 	"https://developer.atlassian.com/cloud/jira/platform/rest/v2/api-group-issues/#api-rest-api-2-issue-issueidorkey-get"
 
@@ -186,19 +201,19 @@ JiraPharoAPI >> issue: issueName [
 	^ znClient get
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JiraPharoAPI >> port [
 
 	^ port
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JiraPharoAPI >> port: anObject [
 
 	port := anObject
 ]
 
-{ #category : #'private - building' }
+{ #category : 'private - building' }
 JiraPharoAPI >> prepareZnClient [
 
 	znClient := ZnClient new.
@@ -208,13 +223,15 @@ JiraPharoAPI >> prepareZnClient [
 	self isHttps
 		ifTrue: [ znClient https ]
 		ifFalse: [ znClient http ].
+	"bearer or api + user"
 	self bearerToken ifNotNil: [ :anApiKey |
-		znClient
-			headerAt: #Authorization
-			put: 'Bearer ' , anApiKey ]
+		znClient headerAt: #Authorization put: 'Bearer ' , anApiKey ].
+	self apiToken ifNotNil: [ :anApiKey |
+		znClient headerAt: #Authorization put: 'Basic '
+			, (self user , ':' , self apiToken) utf8Encoded base64Encoded ]
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 JiraPharoAPI >> project: projectId [
 
 	self prepareZnClient.
@@ -230,19 +247,19 @@ JiraPharoAPI >> project: projectId [
 	^ znClient get
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JiraPharoAPI >> rawData [
 
 	^ rawData
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JiraPharoAPI >> rawData: anObject [
 
 	rawData := anObject
 ]
 
-{ #category : #'api - issue search' }
+{ #category : 'api - issue search' }
 JiraPharoAPI >> searchIssueWithExpand: expand fields: fields fieldsByKeys: fieldsByKeys jql: jql maxResults: maxResults startAt: startAt [
 	"https://developer.atlassian.com/cloud/jira/platform/rest/v2/api-group-issue-search/#api-rest-api-2-search-post"
 
@@ -278,4 +295,16 @@ JiraPharoAPI >> searchIssueWithExpand: expand fields: fields fieldsByKeys: field
 
 	znClient contents: dic.
 	^ znClient post
+]
+
+{ #category : 'accessing' }
+JiraPharoAPI >> user [
+
+	^ user
+]
+
+{ #category : 'accessing' }
+JiraPharoAPI >> user: anObject [
+
+	user := anObject
 ]
