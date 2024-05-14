@@ -10,7 +10,8 @@ Class {
 		'id',
 		'created',
 		'issueType',
-		'timespent'
+		'timespent',
+		'worklogs'
 	],
 	#category : #'JiraPharoAPI-Model'
 }
@@ -121,4 +122,16 @@ JiraPharoIssue >> timespent [
 JiraPharoIssue >> timespent: anObject [
 
 	timespent := anObject
+]
+
+{ #category : #accessing }
+JiraPharoIssue >> worklogs [
+
+	^ worklogs
+]
+
+{ #category : #accessing }
+JiraPharoIssue >> worklogs: anObject [
+
+	worklogs := anObject
 ]
