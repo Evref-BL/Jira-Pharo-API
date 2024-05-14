@@ -81,3 +81,43 @@ issues addAll: tmp issues.
 
 allJiraIssues := issues
 ```
+
+#### Compute average time spent on jira issues by month for a user
+
+```smalltalk
+user := '<username/email>'.
+jqlQuery := String streamContents: [ :stream |
+	stream << 'assignee = "'.
+	stream << user.
+	stream << '"'
+	 ].
+
+issues := OrderedCollection new.
+tmp := jpAPI searchIssueWithExpand: nil fields: {'*all'} fieldsByKeys: nil jql: jqlQuery maxResults: 100 startAt: 0.
+
+issues addAll: tmp issues.
+[tmp issues isNotEmpty ] whileTrue: [ 
+
+	tmp := jpAPI searchIssueWithExpand: nil fields: {'*all'} fieldsByKeys: nil jql: jqlQuery maxResults: 100 startAt:  issues size.
+  issues addAll: tmp issues.
+].
+
+allJiraIssues := issues.
+
+jiraWithTime := allJiraIssues reject: [ :jiraIssue | jiraIssue timespent isNil ].
+grouped := jiraWithTime groupedBy: [ :jiraIssue | jiraIssue created month ].
+computedMean := OrderedDictionary new.
+grouped keysDo: [ :key | computedMean at: key put: ((grouped at: key) sum: #timespent) / (grouped at: key) size ].
+
+"To get a visualization"
+c := RSCompositeChart new.
+c add: (RSBarPlot new y: (computedMean values collect: #asSeconds)).
+c horizontalTick fromNames: computedMean orderedKeys;
+	useDiagonalLabel.
+c verticalTick labelConversion: [ :v | v seconds ].
+c xlabel: 'Month'.
+c ylabel: 'Time spent'.
+c title: 'Mean time spend by dev on jira issue'.
+c
+```
+
