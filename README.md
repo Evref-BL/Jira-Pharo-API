@@ -121,3 +121,24 @@ c title: 'Mean time spend by dev on jira issue'.
 c
 ```
 
+Another option is to assign a jira ticket to the first month work has been log on it
+
+```smalltalk
+jiraWithTime := allJiraIssues reject: [ :jiraIssue | jiraIssue timespent isNil ].
+grouped := jiraWithTime groupedBy: [ :jiraIssue | jiraIssue worklogs first created asDate month ].
+sortedGrouped := (grouped associations asOrderedCollection sort: [:a :b | a key < b key]) asOrderedDictionary .
+computedMean := OrderedDictionary new.
+sortedGrouped keysDo: [ :key | computedMean at: key put: ((grouped at: key) sum: #timespent) / (grouped at: key) size ].
+
+
+c := RSCompositeChart new.
+c add: (RSBarPlot new y: (computedMean values collect: #asSeconds)).
+c horizontalTick fromNames: computedMean orderedKeys;
+	useDiagonalLabel.
+c verticalTick labelConversion: [ :v | v seconds ].
+c xlabel: 'Month'.
+c ylabel: 'Time spent'.
+c title: 'Mean time spend by dev on jira issue'.
+c
+```
+
