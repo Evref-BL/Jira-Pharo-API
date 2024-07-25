@@ -47,6 +47,13 @@ JPTEntityCreator >> newProject [
 ]
 
 { #category : #'entity creation' }
+JPTEntityCreator >> newUser [
+
+	<generated>
+	^ self add: JPUser new
+]
+
+{ #category : #'entity creation' }
 JPTEntityCreator >> newWorklog [
 
 	<generated>

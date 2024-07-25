@@ -6,7 +6,8 @@ Class {
 		'issue',
 		'issueType',
 		'project',
-		'worklog'
+		'worklog',
+		'user'
 	],
 	#category : #'JiraPharoAPI-Model-Generator'
 }
@@ -32,7 +33,8 @@ JPMetamodelGenerator >> defineClasses [
 	issue := builder newClassNamed: 'Issue'.
 	issueType := builder newClassNamed: 'IssueType'.
 	project := builder newClassNamed: 'Project'.
-	worklog := builder newClassNamed: 'Worklog'
+	worklog := builder newClassNamed: 'Worklog'.
+	user := builder newClassNamed: 'User'.
 ]
 
 { #category : #definition }
@@ -75,7 +77,13 @@ JPMetamodelGenerator >> defineProperties [
 	worklog property: #id type: #Number.
 	worklog property: #author type: #Object.
 	worklog property: #updateAuthor type: #Object.
-	worklog withEqualityCheckOn: { #id }
+	worklog withEqualityCheckOn: { #id }.
+
+	user property: #accountId type: #String.
+	user property: #displayName type: #String.
+	user property: #emailAddress type: #String.
+	user property: #name type: #String.
+	user property: #accountType type: #String
 ]
 
 { #category : #definition }
