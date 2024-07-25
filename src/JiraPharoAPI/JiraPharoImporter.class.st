@@ -66,11 +66,19 @@ JiraPharoImporter >> importAllIssuesOf: aUsername [
 { #category : #'api - import' }
 JiraPharoImporter >> loadIssues: issues [
 
-	| issuesToLoad issueTypeToLoad |
+	| issuesToLoad |
 	issuesToLoad := issues reject: [ :issueProposedForImmport |
 		                (self model allWithType: JPIssue) anySatisfy: [
 			                :issue | issue id = issueProposedForImmport id ] ].
 	self model addAll: issuesToLoad.
+	self loadTypeForIssuesToLoad: issuesToLoad.
+	self loadWorklogsForIssuesToLoad: issuesToLoad
+]
+
+{ #category : #'api - import' }
+JiraPharoImporter >> loadTypeForIssuesToLoad: issuesToLoad [
+
+	| issueTypeToLoad |
 	issueTypeToLoad := issuesToLoad iterator
 	                   | [ :issue | issue type ] collectIt
 	                   | [ :issueType | issueType isNil ] rejectIt
@@ -82,6 +90,24 @@ JiraPharoImporter >> loadIssues: issues [
 			detect: [ :ty | ty = issue type ]
 			ifOne: [ :ty | issue type: ty ] ].
 	self model addAll: issueTypeToLoad
+]
+
+{ #category : #'api - import' }
+JiraPharoImporter >> loadWorklogsForIssuesToLoad: issuesToLoad [
+
+	| worklogsToLoad |
+	worklogsToLoad := issuesToLoad iterator
+	                  | [ :issue | issue worklogs ] flatCollectIt
+	                  | [ :worklog | worklog isNil ] rejectIt
+	                  |
+	                  [ :worklog | self model includes: worklog ]
+		                  rejectIt > Set.
+	"This reasign workloads to load to the correct issue in case the issue was not correctly assigned first."
+	worklogsToLoad do: [ :workload |
+		(self model allWithType: JPIssue)
+			detect: [ :issue | issue id = workload issue id ]
+			ifOne: [ :issue | workload issue: issue ] ].
+	self model addAll: worklogsToLoad
 ]
 
 { #category : #accessing }

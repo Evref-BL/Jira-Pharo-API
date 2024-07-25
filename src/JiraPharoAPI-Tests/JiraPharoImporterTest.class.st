@@ -62,6 +62,23 @@ JiraPharoImporterTest >> testLoadIssuesWithSameType [
 ]
 
 { #category : #tests }
+JiraPharoImporterTest >> testLoadIssuesWithWorklog [
+
+	| issue worklog |
+	issue := JPIssue new
+		         id: 1;
+		         yourself.
+	worklog := JPWorklog new
+		           id: 12;
+		           yourself.
+	issue addWorklog: worklog.
+
+	jpImporter loadIssues: { issue }.
+	self assert: model size equals: 2.
+	self assert: issue worklogs first equals: worklog
+]
+
+{ #category : #tests }
 JiraPharoImporterTest >> testLoadOneIssueWithAIssueType [
 
 	| issueA issueTypeA |
@@ -91,4 +108,42 @@ JiraPharoImporterTest >> testLoadSameIssueTwoTimes [
 			 id: 1;
 			 yourself) }.
 	self assert: model size equals: 1
+]
+
+{ #category : #tests }
+JiraPharoImporterTest >> testLoadWorklogsForIssuesToLoad [
+
+	| issue worklog |
+	issue := JPIssue new
+		         id: 1;
+		         yourself.
+	worklog := JPWorklog new
+		           id: 12;
+		           yourself.
+	issue addWorklog: worklog.
+
+	jpImporter loadWorklogsForIssuesToLoad: { issue }.
+	self assert: model size equals: 1.
+	self assert: issue worklogs first equals: worklog
+]
+
+{ #category : #tests }
+JiraPharoImporterTest >> testLoadWorklogsForIssuesToLoadIssueIsAlreadyExistingButNotWorklog [
+
+	| issue worklog issueB |
+	issue := JPIssue new
+		         id: 1;
+		         yourself.
+	model add: issue.
+	issueB := JPIssue new
+		         id: 1;
+		         yourself.
+	worklog := JPWorklog new
+		           id: 12;
+		           yourself.
+	issueB addWorklog: worklog.
+
+	jpImporter loadWorklogsForIssuesToLoad: { issueB }.
+	self assert: model size equals: 2.
+	self assert: issue worklogs first equals: worklog
 ]

@@ -74,7 +74,8 @@ JPMetamodelGenerator >> defineProperties [
 	worklog property: #timespent type: #Object.
 	worklog property: #id type: #Number.
 	worklog property: #author type: #Object.
-	worklog property: #updateAuthor type: #Object
+	worklog property: #updateAuthor type: #Object.
+	worklog withEqualityCheckOn: { #id }
 ]
 
 { #category : #definition }

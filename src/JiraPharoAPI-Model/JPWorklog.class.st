@@ -47,6 +47,13 @@ JPWorklog class >> annotation [
 	^ self
 ]
 
+{ #category : #comparing }
+JPWorklog >> = aJPWorklog [
+
+	<generated>
+	^ aJPWorklog id = self id
+]
+
 { #category : #accessing }
 JPWorklog >> author [
 
@@ -73,6 +80,13 @@ JPWorklog >> created [
 JPWorklog >> created: anObject [
 	<generated>
 	created := anObject
+]
+
+{ #category : #comparing }
+JPWorklog >> hash [
+
+	<generated>
+	^ self id hash 
 ]
 
 { #category : #accessing }
