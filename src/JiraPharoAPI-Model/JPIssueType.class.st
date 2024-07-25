@@ -45,6 +45,13 @@ JPIssueType class >> annotation [
 	^ self
 ]
 
+{ #category : #comparing }
+JPIssueType >> = aJPIssueType [
+
+	<generated>
+	^ aJPIssueType id = self id
+]
+
 { #category : #accessing }
 JPIssueType >> avatarId [
 
@@ -71,6 +78,13 @@ JPIssueType >> description [
 JPIssueType >> description: anObject [
 	<generated>
 	description := anObject
+]
+
+{ #category : #comparing }
+JPIssueType >> hash [
+
+	<generated>
+	^ self id hash 
 ]
 
 { #category : #accessing }

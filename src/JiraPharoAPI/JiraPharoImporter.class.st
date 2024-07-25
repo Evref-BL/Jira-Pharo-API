@@ -70,7 +70,10 @@ JiraPharoImporter >> loadIssues: issues [
 	issuesToLoad := issues reject: [ :issueProposedForImmport |
 		                (self model allWithType: JPIssue) anySatisfy: [
 			                :issue | issue id = issueProposedForImmport id ] ].
-	self model addAll: issuesToLoad
+	self model addAll: issuesToLoad.
+	self model addAll:
+		issuesToLoad iterator | [ :issue | issue type ] collectIt
+		| [ :issueType | issueType isNil ] rejectIt > Set
 ]
 
 { #category : #accessing }

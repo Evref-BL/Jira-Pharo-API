@@ -59,6 +59,7 @@ JPMetamodelGenerator >> defineProperties [
 	issueType property: #name type: #String.
 	issueType property: #subtask type: #String.
 	issueType property: #avatarId type: #String.
+	issueType withEqualityCheckOn: { #id }.
 
 	component property: #id type: #Number.
 	component property: #name type: #String.
