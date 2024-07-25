@@ -47,12 +47,12 @@ JiraPharoAPI >> allProjects [
 			| reader |
 			reader := NeoJSONReader on: entity contents readStream.
 			reader
-				for: JiraPharoProject
+				for: JPProject
 				do: [ :mapping | mapping mapInstVars: #( key id name ) ].
 			reader
 				for: #ArrayOfJiraPharoProjects
 				customDo: [ :mapping |
-				mapping listOfElementSchema: JiraPharoProject ].
+				mapping listOfElementSchema: JPProject ].
 
 			reader nextAs: #ArrayOfJiraPharoProjects ] ].
 	^ znClient get
@@ -111,12 +111,12 @@ JiraPharoAPI >> configureReaderForJiraIssue: reader [
 
 	reader
 		for: #ArrayOfJiraPharoIssues
-		customDo: [ :mapping | mapping listOfElementSchema: JiraPharoIssue ].
+		customDo: [ :mapping | mapping listOfElementSchema: JPIssue ].
 
 	reader for: JiraPharoIssueSearchResult do: [ :mapping |
 		mapping mapInstVars: #( expand startAt maxResults total ).
 		(mapping mapInstVar: #issues) valueSchema: #ArrayOfJiraPharoIssues ].
-	reader for: JiraPharoIssue do: [ :mapping |
+	reader for: JPIssue do: [ :mapping |
 		mapping mapInstVars: #( key id ).
 
 		mapping
@@ -133,7 +133,7 @@ JiraPharoAPI >> configureReaderForJiraIssue: reader [
 				value at: #worklog ifPresent: [ :worklog |
 					pharoIssue worklogs: ((worklog at: #worklogs) collect: [ :wl |
 							 | s |
-							 s := JiraPharoWorklog new
+							 s := JPWorklog new
 								      created: (wl at: #created) asDateAndTime;
 								      yourself.
 							 wl
@@ -150,8 +150,8 @@ JiraPharoAPI >> configureReaderForJiraIssue: reader [
 
 				value at: #issuetype ifPresent: [ :issuetype |
 					| createdIssueType |
-					createdIssueType := JiraPharoIssueType new.
-					pharoIssue issueType: createdIssueType.
+					createdIssueType := JPIssueType new.
+					pharoIssue type: createdIssueType.
 					issuetype at: #id ifPresent: [ :t | createdIssueType id: t ].
 					issuetype
 						at: #description
@@ -173,7 +173,7 @@ JiraPharoAPI >> configureReaderForJiraIssue: reader [
 				value at: #components ifPresent: [ :cmps |
 					pharoIssue components: (cmps collect: [ :cmp |
 							 | localComponent |
-							 localComponent := JiraPharoComponent new.
+							 localComponent := JPComponent new.
 							 cmp at: #id ifPresent: [ :t | localComponent id: t ].
 							 cmp at: #name ifPresent: [ :t | localComponent name: t ].
 
@@ -183,7 +183,7 @@ JiraPharoAPI >> configureReaderForJiraIssue: reader [
 { #category : #'api - issue search' }
 JiraPharoAPI >> configureReaderForJiraWorkload: reader [
 
-	reader for: JiraPharoWorklog do: [ :mapping |
+	reader for: JPWorklog do: [ :mapping |
 		mapping mapInstVars: #( id ).
 		(mapping mapInstVar: #created) valueSchema: DateAndTime.
 		(mapping mapInstVar: #updated) valueSchema: DateAndTime.
@@ -191,7 +191,7 @@ JiraPharoAPI >> configureReaderForJiraWorkload: reader [
 
 
 	reader for: #ArrayOfJiraPharoWorkload customDo: [ :customMapping |
-		customMapping listOfElementSchema: JiraPharoWorklog ]
+		customMapping listOfElementSchema: JPWorklog ]
 ]
 
 { #category : #accessing }
@@ -245,7 +245,7 @@ JiraPharoAPI >> issue: issueName [
 	znClient path: self basePath , '/issue/' , issueName.
 	self rawData ifFalse: [
 		znClient contentReader: [ :entity |
-			generalReader nextAs: JiraPharoIssue ] ].
+			generalReader nextAs: JPIssue ] ].
 	^ znClient get
 ]
 
@@ -289,9 +289,9 @@ JiraPharoAPI >> project: projectId [
 			| reader |
 			reader := NeoJSONReader on: entity contents readStream.
 			reader
-				for: JiraPharoProject
+				for: JPProject
 				do: [ :mapping | mapping mapInstVars: #( key id name ) ].
-			reader nextAs: JiraPharoProject ] ].
+			reader nextAs: JPProject ] ].
 	^ znClient get
 ]
 
