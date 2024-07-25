@@ -31,7 +31,8 @@ Class {
 		'https',
 		'apiToken',
 		'bearerToken',
-		'rawData'
+		'rawData',
+		'generalReader'
 	],
 	#category : #JiraPharoAPI
 }
@@ -106,64 +107,77 @@ JiraPharoAPI >> bearerToken: anObject [
 ]
 
 { #category : #'api - issue search' }
-JiraPharoAPI >> configureMappingForJiraIssue: mapping [
+JiraPharoAPI >> configureReaderForJiraIssue: reader [
 
-	mapping mapInstVars: #( key id ).
+	reader
+		for: #ArrayOfJiraPharoIssues
+		customDo: [ :mapping | mapping listOfElementSchema: JiraPharoIssue ].
 
-	mapping
-		mapProperty: 'fields'
-		getter: [ :el | "Not used" ]
-		setter: [ :pharoIssue :value |
-			value
-				at: #timespent
-				ifPresent: [ :ti |
-				ti ifNotNil: [ pharoIssue timespent: ti seconds ] ].
-			value at: #summary ifPresent: [ :sum | pharoIssue summary: sum ].
-			value at: #labels ifPresent: [ :labs | pharoIssue labels: labs ].
+	reader for: JiraPharoIssueSearchResult do: [ :mapping |
+		mapping mapInstVars: #( expand startAt maxResults total ).
+		(mapping mapInstVar: #issues) valueSchema: #ArrayOfJiraPharoIssues ].
+	reader for: JiraPharoIssue do: [ :mapping |
+		mapping mapInstVars: #( key id ).
 
-			value at: #worklog ifPresent: [ :worklog |
-				pharoIssue worklogs: ((worklog at: #worklogs) collect: [ :wl |
-						 | s |
-						 s := JiraPharoWorklog new
-							      created: (wl at: #created) asDateAndTime;
-							      yourself.
-						wl at: #updated ifPresent: [ :updated | s updated: updated asDateAndTime. ].
-						wl at: #started ifPresent: [ :started | s started: started asDateAndTime. ].
-						wl at: #timeSpentSeconds ifPresent: [ :timeSpentSeconds | s timespent: timeSpentSeconds second. ].
-							
-							 ]) ].
+		mapping
+			mapProperty: 'fields'
+			getter: [ :el | "Not used" ]
+			setter: [ :pharoIssue :value |
+				value
+					at: #timespent
+					ifPresent: [ :ti |
+					ti ifNotNil: [ pharoIssue timespent: ti seconds ] ].
+				value at: #summary ifPresent: [ :sum | pharoIssue summary: sum ].
+				value at: #labels ifPresent: [ :labs | pharoIssue labels: labs ].
+
+				value at: #worklog ifPresent: [ :worklog |
+					pharoIssue worklogs: ((worklog at: #worklogs) collect: [ :wl |
+							 | s |
+							 s := JiraPharoWorklog new
+								      created: (wl at: #created) asDateAndTime;
+								      yourself.
+							 wl
+								 at: #updated
+								 ifPresent: [ :updated | s updated: updated asDateAndTime ].
+							 wl
+								 at: #started
+								 ifPresent: [ :started | s started: started asDateAndTime ].
+							 wl
+								 at: #timeSpentSeconds
+								 ifPresent: [ :timeSpentSeconds |
+								 s timespent: timeSpentSeconds second ] ]) ].
 
 
-			value at: #issuetype ifPresent: [ :issuetype |
-				| createdIssueType |
-				createdIssueType := JiraPharoIssueType new.
-				pharoIssue issueType: createdIssueType.
-				issuetype at: #id ifPresent: [ :t | createdIssueType id: t ].
-				issuetype
-					at: #description
-					ifPresent: [ :t | createdIssueType description: t ].
-				issuetype
-					at: #iconUrl
-					ifPresent: [ :t | createdIssueType iconUrl: t ].
-				issuetype at: #name ifPresent: [ :t | createdIssueType name: t ].
-				issuetype
-					at: #subtask
-					ifPresent: [ :t | createdIssueType subtask: t ].
-				issuetype
-					at: #avatarId
-					ifPresent: [ :t | createdIssueType avatarId: t ] ].
-			value
-				at: #created
-				ifPresent: [ :dateString |
-				pharoIssue created: (Date fromString: dateString) ].
-			value at: #components ifPresent: [ :cmps |
-				pharoIssue components: (cmps collect: [ :cmp |
-						 | localComponent |
-						 localComponent := JiraPharoComponent new.
-						 cmp at: #id ifPresent: [ :t | localComponent id: t ].
-						 cmp at: #name ifPresent: [ :t | localComponent name: t ].
+				value at: #issuetype ifPresent: [ :issuetype |
+					| createdIssueType |
+					createdIssueType := JiraPharoIssueType new.
+					pharoIssue issueType: createdIssueType.
+					issuetype at: #id ifPresent: [ :t | createdIssueType id: t ].
+					issuetype
+						at: #description
+						ifPresent: [ :t | createdIssueType description: t ].
+					issuetype
+						at: #iconUrl
+						ifPresent: [ :t | createdIssueType iconUrl: t ].
+					issuetype at: #name ifPresent: [ :t | createdIssueType name: t ].
+					issuetype
+						at: #subtask
+						ifPresent: [ :t | createdIssueType subtask: t ].
+					issuetype
+						at: #avatarId
+						ifPresent: [ :t | createdIssueType avatarId: t ] ].
+				value
+					at: #created
+					ifPresent: [ :dateString |
+					pharoIssue created: (Date fromString: dateString) ].
+				value at: #components ifPresent: [ :cmps |
+					pharoIssue components: (cmps collect: [ :cmp |
+							 | localComponent |
+							 localComponent := JiraPharoComponent new.
+							 cmp at: #id ifPresent: [ :t | localComponent id: t ].
+							 cmp at: #name ifPresent: [ :t | localComponent name: t ].
 
-						 localComponent ]) ] ]
+							 localComponent ]) ] ] ]
 ]
 
 { #category : #'api - issue search' }
@@ -192,6 +206,18 @@ JiraPharoAPI >> endpoint: anObject [
 	endpoint := anObject
 ]
 
+{ #category : #accessing }
+JiraPharoAPI >> generalReader [
+
+	^ generalReader
+]
+
+{ #category : #accessing }
+JiraPharoAPI >> generalReader: anObject [
+
+	generalReader := anObject
+]
+
 { #category : #initialization }
 JiraPharoAPI >> initialize [
 
@@ -199,7 +225,10 @@ JiraPharoAPI >> initialize [
 	endpoint := 'jira.atlassian.com'.
 	self basePath: '/rest/api/latest/'.
 	https := true.
-	self rawData: false
+	self rawData: false.
+	generalReader := NeoJSONReader new.
+	self configureReaderForJiraIssue: generalReader.
+	self configureReaderForJiraWorkload: generalReader
 ]
 
 { #category : #accessing }
@@ -216,12 +245,7 @@ JiraPharoAPI >> issue: issueName [
 	znClient path: self basePath , '/issue/' , issueName.
 	self rawData ifFalse: [
 		znClient contentReader: [ :entity |
-			| reader |
-			reader := NeoJSONReader on: entity contents readStream.
-			reader
-				for: JiraPharoIssue
-				do: [ :mapping | self configureMappingForJiraIssue: mapping ].
-			reader nextAs: JiraPharoIssue ] ].
+			generalReader nextAs: JiraPharoIssue ] ].
 	^ znClient get
 ]
 
@@ -301,21 +325,9 @@ JiraPharoAPI >> searchIssueWithExpand: expand fields: fields fieldsByKeys: field
 
 	self rawData ifFalse: [
 		znClient contentReader: [ :entity |
-			| reader |
-			reader := NeoJSONReader on: entity contents readStream.
-			reader
-				for: JiraPharoIssue
-				do: [ :mapping | self configureMappingForJiraIssue: mapping ].
-			reader
-				for: #ArrayOfJiraPharoIssues
-				customDo: [ :mapping |
-				mapping listOfElementSchema: JiraPharoIssue ].
-
-			reader for: JiraPharoIssueSearchResult do: [ :mapping |
-				mapping mapInstVars: #( expand startAt maxResults total ).
-				(mapping mapInstVar: #issues) valueSchema: #ArrayOfJiraPharoIssues ].
-
-			reader nextAs: JiraPharoIssueSearchResult ] ].
+			generalReader
+				on: entity contents readStream;
+				nextAs: JiraPharoIssueSearchResult ] ].
 
 	znClient contents: dic.
 	^ znClient post

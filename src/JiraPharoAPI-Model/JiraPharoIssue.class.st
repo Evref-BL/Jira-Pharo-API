@@ -101,6 +101,16 @@ JiraPharoIssue >> labels: anObject [
 ]
 
 { #category : #accessing }
+JiraPharoIssue >> printOn: aStream [
+
+	aStream
+		nextPutAll: '(';
+		nextPutAll: self key;
+		nextPutAll: ') ';
+		nextPutAll: self summary
+]
+
+{ #category : #accessing }
 JiraPharoIssue >> summary [
 
 	^ summary
