@@ -1,23 +1,5 @@
 "
-## About
-
-We try to follow the [website](https://developer.atlassian.com/cloud/jira/platform/rest/v2/intro/#about) organisation for the protocol of each method
-
-## API
-
-- `rawData`: change to true if you want the full json receive and no automatic Pharo converting
-
-## Example
-
-```st
-jpAPI := JiraPharoAPI new.
-jpAPI endpoint: '<your endpoint>'.
-jpAPI basePath: '<basePath>/rest/api/latest/'.
-jpAPI beHttps.
-jpAPI bearerToken: '<Your personal token>'.
-
-jpAPI issue: '<issue name>'.
-```
+I am a class that comes with several utilities to import correctly a Jira model
 "
 Class {
 	#name : #JiraPharoAPI,

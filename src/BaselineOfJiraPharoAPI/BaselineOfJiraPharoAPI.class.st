@@ -1,11 +1,10 @@
 Class {
-	#name : 'BaselineOfJiraPharoAPI',
-	#superclass : 'BaselineOf',
-	#category : 'BaselineOfJiraPharoAPI',
-	#package : 'BaselineOfJiraPharoAPI'
+	#name : #BaselineOfJiraPharoAPI,
+	#superclass : #BaselineOf,
+	#category : #BaselineOfJiraPharoAPI
 }
 
-{ #category : 'baselines' }
+{ #category : #baselines }
 BaselineOfJiraPharoAPI >> baseline: spec [
 
 	<baseline>
@@ -15,7 +14,7 @@ BaselineOfJiraPharoAPI >> baseline: spec [
 		self defineGroups: spec ]
 ]
 
-{ #category : 'baselines' }
+{ #category : #baselines }
 BaselineOfJiraPharoAPI >> defineDependencies: spec [
 
 	spec
@@ -23,15 +22,22 @@ BaselineOfJiraPharoAPI >> defineDependencies: spec [
 		with: [ spec repository: 'github://svenvc/NeoJSON/repository' ]
 ]
 
-{ #category : 'baselines' }
+{ #category : #baselines }
 BaselineOfJiraPharoAPI >> defineGroups: spec [
 ]
 
-{ #category : 'baselines' }
+{ #category : #baselines }
 BaselineOfJiraPharoAPI >> definePackages: spec [
 
 	spec
 		package: 'JiraPharoAPI'
 		with: [ spec requires: #( 'JiraPharoAPI-Model' 'NeoJSON' ) ].
-	spec package: 'JiraPharoAPI-Model'
+	spec package: 'JiraPharoAPI-Model'.
+	spec
+		package: 'JiraPharoAPI-Model-Extended'
+		with: [ spec requires: #( 'JiraPharoAPI-Model' ) ].
+	spec package: 'JiraPharoAPI-Model-Generator'.
+	spec
+		package: 'JiraPharoAPI-Tests'
+		with: [ spec requires: #( 'JiraPharoAPI' 'JiraPharoAPI-Model' ) ]
 ]
