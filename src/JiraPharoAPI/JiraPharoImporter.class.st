@@ -66,14 +66,22 @@ JiraPharoImporter >> importAllIssuesOf: aUsername [
 { #category : #'api - import' }
 JiraPharoImporter >> loadIssues: issues [
 
-	| issuesToLoad |
+	| issuesToLoad issueTypeToLoad |
 	issuesToLoad := issues reject: [ :issueProposedForImmport |
 		                (self model allWithType: JPIssue) anySatisfy: [
 			                :issue | issue id = issueProposedForImmport id ] ].
 	self model addAll: issuesToLoad.
-	self model addAll:
-		issuesToLoad iterator | [ :issue | issue type ] collectIt
-		| [ :issueType | issueType isNil ] rejectIt > Set
+	issueTypeToLoad := issuesToLoad iterator
+	                   | [ :issue | issue type ] collectIt
+	                   | [ :issueType | issueType isNil ] rejectIt
+	                   |
+	                   [ :issueType | self model includes: issueType ]
+		                   rejectIt > Set.
+	issuesToLoad do: [ :issue |
+		issueTypeToLoad
+			detect: [ :ty | ty = issue type ]
+			ifOne: [ :ty | issue type: ty ] ].
+	self model addAll: issueTypeToLoad
 ]
 
 { #category : #accessing }

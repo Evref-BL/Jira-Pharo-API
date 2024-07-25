@@ -6,7 +6,7 @@
 | Relation | Origin | Opposite | Type | Comment |
 |---|
 | `components` | `JPIssue` | `issue` | `JPComponent` | |
-| `type` | `JPIssue` | `issue` | `JPIssueType` | |
+| `type` | `JPIssue` | `issues` | `JPIssueType` | |
 | `worklogs` | `JPIssue` | `issue` | `JPWorklog` | |
 
 
@@ -28,16 +28,16 @@ Class {
 	#name : #JPIssue,
 	#superclass : #JPEntity,
 	#instVars : [
-		'#description => FMProperty',
-		'#summary => FMProperty',
-		'#key => FMProperty',
-		'#id => FMProperty',
-		'#created => FMProperty',
-		'#timespent => FMProperty',
-		'#labels => FMProperty',
 		'#components => FMMany type: #JPComponent opposite: #issue',
-		'#worklogs => FMMany type: #JPWorklog opposite: #issue',
-		'#type => FMOne type: #JPIssueType opposite: #issue'
+		'#created => FMProperty',
+		'#description => FMProperty',
+		'#id => FMProperty',
+		'#key => FMProperty',
+		'#labels => FMProperty',
+		'#summary => FMProperty',
+		'#timespent => FMProperty',
+		'#type => FMOne type: #JPIssueType opposite: #issues',
+		'#worklogs => FMMany type: #JPWorklog opposite: #issue'
 	],
 	#category : #'JiraPharoAPI-Model-Entities'
 }
@@ -179,7 +179,7 @@ JPIssue >> timespent: anObject [
 
 { #category : #accessing }
 JPIssue >> type [
-	"Relation named: #type type: #JPIssueType opposite: #issue"
+	"Relation named: #type type: #JPIssueType opposite: #issues"
 
 	<generated>
 	^ type

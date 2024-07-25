@@ -32,7 +32,7 @@ JiraPharoImporterTest >> testLoadIssues [
 { #category : #tests }
 JiraPharoImporterTest >> testLoadIssuesWithSameType [
 
-	| issueA issueB issueTypeA issueTypeB |
+	| issueA issueB issueTypeA issueTypeB selectedIssueBySet |
 	issueTypeA := JPIssueType new
 		              id: 125;
 		              name: 'sub-task';
@@ -53,7 +53,12 @@ JiraPharoImporterTest >> testLoadIssuesWithSameType [
 	jpImporter loadIssues: {
 			issueA.
 			issueB }.
-	self assert: model size equals: 3
+	self assert: model size equals: 3.
+	"This is necessary because we do not know excalty the type that will be selected since they are the same"
+	selectedIssueBySet := issueA type.
+	self assert: issueA type identicalTo: selectedIssueBySet.
+	self assert: issueB type identicalTo: selectedIssueBySet.
+	self assert: selectedIssueBySet issues size equals: 2
 ]
 
 { #category : #tests }

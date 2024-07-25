@@ -5,7 +5,7 @@
 ### Other
 | Relation | Origin | Opposite | Type | Comment |
 |---|
-| `issue` | `JPIssueType` | `type` | `JPIssue` | |
+| `issues` | `JPIssueType` | `type` | `JPIssue` | |
 
 
 ## Properties
@@ -25,13 +25,13 @@ Class {
 	#name : #JPIssueType,
 	#superclass : #JPEntity,
 	#instVars : [
-		'#id => FMProperty',
+		'#avatarId => FMProperty',
 		'#description => FMProperty',
 		'#iconUrl => FMProperty',
+		'#id => FMProperty',
+		'#issues => FMMany type: #JPIssue opposite: #type',
 		'#name => FMProperty',
-		'#subtask => FMProperty',
-		'#avatarId => FMProperty',
-		'#issue => FMOne type: #JPIssue opposite: #type'
+		'#subtask => FMProperty'
 	],
 	#category : #'JiraPharoAPI-Model-Entities'
 }
@@ -50,6 +50,12 @@ JPIssueType >> = aJPIssueType [
 
 	<generated>
 	^ aJPIssueType id = self id
+]
+
+{ #category : #adding }
+JPIssueType >> addIssue: anObject [
+	<generated>
+	^ self issues add: anObject
 ]
 
 { #category : #accessing }
@@ -116,19 +122,19 @@ JPIssueType >> id: anObject [
 ]
 
 { #category : #accessing }
-JPIssueType >> issue [
-	"Relation named: #issue type: #JPIssue opposite: #type"
+JPIssueType >> issues [
+	"Relation named: #issues type: #JPIssue opposite: #type"
 
 	<generated>
 	<derived>
-	^ issue
+	^ issues
 ]
 
 { #category : #accessing }
-JPIssueType >> issue: anObject [
+JPIssueType >> issues: anObject [
 
 	<generated>
-	issue := anObject
+	issues value: anObject
 ]
 
 { #category : #accessing }
