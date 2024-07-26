@@ -26,6 +26,16 @@ JiraPharoImporter >> api: anObject [
 ]
 
 { #category : #'api - import' }
+JiraPharoImporter >> ensureUser: aPotentialUser [
+	"Search is user is already in model"
+
+	(self model allWithType: JPUser)
+		detect: [ :user | user = aPotentialUser ]
+		ifOne: [ :userFromModel | ^ userFromModel ].
+	^ self model add: aPotentialUser
+]
+
+{ #category : #'api - import' }
 JiraPharoImporter >> extractAllIssuesOf: aUsername [
 
 	| issues jqlQuery tmp |
@@ -66,18 +76,10 @@ JiraPharoImporter >> importAllIssuesOf: aUsername [
 { #category : #'api - import' }
 JiraPharoImporter >> loadAssigneeForIssuesToLoad: issuesToLoad [
 
-	| assigneeToLoad |
-	assigneeToLoad := issuesToLoad iterator
-	                  | [ :issue | issue assignee ] collectIt
-	                  | [ :assignee | assignee isNil ] rejectIt
-	                  |
-	                  [ :assignee | self model includes: assignee ]
-		                  rejectIt > Set.
-	assigneeToLoad do: [ :assignee |
-		(self model allWithType: JPIssue)
-			select: [ :issue | issue assignee = assignee ]
-			thenDo: [ :issue | issue assignee: assignee ] ].
-	self model addAll: assigneeToLoad
+	issuesToLoad
+		reject: [ :issue | issue assignee isNil ]
+		thenDo: [ :issue |
+		issue assignee: (self ensureUser: issue assignee) ]
 ]
 
 { #category : #'api - import' }
