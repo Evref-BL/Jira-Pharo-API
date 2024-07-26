@@ -22,6 +22,33 @@ JiraPharoImporterTest >> setUp [
 ]
 
 { #category : #test }
+JiraPharoImporterTest >> testEnsureUser [
+
+	| user createdUser |
+	user := JPUser new
+		        accountId: 12;
+		        yourself.
+	createdUser := jpImporter ensureUser: user.
+	self assert: createdUser identicalTo: user
+]
+
+{ #category : #test }
+JiraPharoImporterTest >> testEnsureUserAlreadyExisting [
+
+	| user createdUser userB |
+	user := JPUser new
+		        accountId: 12;
+		        yourself.
+	model add: user.
+	userB := JPUser new
+		         accountId: 12;
+		         yourself.
+	createdUser := jpImporter ensureUser: userB.
+	self assert: createdUser identicalTo: user.
+	self deny: createdUser identicalTo: userB
+]
+
+{ #category : #test }
 JiraPharoImporterTest >> testLoadAssigneeForIssuesToLoad [
 
 	| issue assignee |
