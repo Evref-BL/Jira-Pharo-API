@@ -83,7 +83,8 @@ JPMetamodelGenerator >> defineProperties [
 	user property: #displayName type: #String.
 	user property: #emailAddress type: #String.
 	user property: #name type: #String.
-	user property: #accountType type: #String
+	user property: #accountType type: #String.
+	user withEqualityCheckOn: { #accountId }.
 ]
 
 { #category : #definition }

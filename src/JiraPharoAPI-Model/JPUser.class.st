@@ -45,6 +45,13 @@ JPUser class >> annotation [
 	^ self
 ]
 
+{ #category : #comparing }
+JPUser >> = aJPUser [
+
+	<generated>
+	^ aJPUser accountId = self accountId
+]
+
 { #category : #accessing }
 JPUser >> accountId [
 
@@ -134,6 +141,13 @@ JPUser >> emailAddress [
 JPUser >> emailAddress: anObject [
 	<generated>
 	emailAddress := anObject
+]
+
+{ #category : #comparing }
+JPUser >> hash [
+
+	<generated>
+	^ self accountId hash 
 ]
 
 { #category : #accessing }

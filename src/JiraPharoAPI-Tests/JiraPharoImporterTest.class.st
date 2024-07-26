@@ -81,6 +81,36 @@ JiraPharoImporterTest >> testLoadIssuesWithSameType [
 ]
 
 { #category : #tests }
+JiraPharoImporterTest >> testLoadIssuesWithSameTypeTypeHaveReferences [
+
+	| issueA issueB issueTypeA issueTypeB |
+	issueTypeA := JPIssueType new
+		              id: 125;
+		              name: 'sub-task';
+		              yourself.
+	issueTypeB := JPIssueType new
+		              id: 125;
+		              name: 'sub-task';
+		              yourself.
+	issueA := JPIssue new
+		          id: 1;
+		          type: issueTypeA;
+		          yourself.
+	issueB := JPIssue new
+		          id: 2;
+		          type: issueTypeB;
+		          yourself.
+
+	jpImporter loadIssues: {
+			issueA.
+			issueB }.
+	self assert: (model allWithType: JPIssueType) size equals: 1.
+	self
+		assert: (model allWithType: JPIssueType) first issues size
+		equals: 2
+]
+
+{ #category : #tests }
 JiraPharoImporterTest >> testLoadIssuesWithWorklog [
 
 	| issue worklog |
@@ -128,6 +158,65 @@ JiraPharoImporterTest >> testLoadSameIssueTwoTimes [
 			 id: 1;
 			 yourself) }.
 	self assert: model size equals: 1
+]
+
+{ #category : #test }
+JiraPharoImporterTest >> testLoadTwoIssuesWithSameAuthor [
+
+	| issue creator issueB |
+	issue := JPIssue new
+		         id: 1;
+		         description: 'Issue 1';
+		         yourself.
+	issueB := JPIssue new
+		          id: 1;
+		          description: 'Issue 1';
+		          yourself.
+	creator := JPUser new
+		           accountId: 12;
+		           yourself.
+	issue creator: creator.
+	issueB creator: creator.
+
+	jpImporter loadCreatorForIssuesToLoad: { issue }.
+	self assert: model size equals: 1.
+	self assert: model first equals: creator.
+	self assert: issue creator equals: creator
+]
+
+{ #category : #test }
+JiraPharoImporterTest >> testLoadTwoIssuesWithSameAuthorComplete [
+
+	| issue creator issueB creatorB |
+	issue := JPIssue new
+		         id: 1;
+		         description: 'Issue 1';
+		         yourself.
+	issueB := JPIssue new
+		          id: 1;
+		          description: 'Issue 1';
+		          yourself.
+	creator := JPUser new
+		           accountId: 12;
+		           displayName: 'John Doe';
+		           yourself.
+	creatorB := JPUser new
+		            accountId: 12;
+		            displayName: 'John Doe';
+		            yourself.
+	issue creator: creator.
+	issueB creator: creatorB.
+
+	jpImporter loadIssues: {
+			issue.
+			issueB }.
+	self assert: model size equals: 3.
+	self assert: (model allWithType: JPUser) size equals: 1.
+	self
+		assert: (model allWithType: JPUser) first createdIssues size
+		equals: 2.
+	self assert: (model allWithType: JPIssue) size equals: 2.
+	self assert: issue creator identicalTo: issueB creator
 ]
 
 { #category : #tests }
