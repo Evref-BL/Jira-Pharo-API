@@ -64,6 +64,24 @@ JiraPharoImporter >> importAllIssuesOf: aUsername [
 ]
 
 { #category : #'api - import' }
+JiraPharoImporter >> loadCreatorForIssuesToLoad: issuesToLoad [
+"
+	| worklogsToLoad |
+	worklogsToLoad := issuesToLoad iterator
+	                  | [ :issue | issue worklogs ] flatCollectIt
+	                  | [ :worklog | worklog isNil ] rejectIt
+	                  |
+	                  [ :worklog | self model includes: worklog ]
+		                  rejectIt > Set.
+	""This reasign workloads to load to the correct issue in case the issue was not correctly assigned first.""
+	worklogsToLoad do: [ :workload |
+		(self model allWithType: JPIssue)
+			detect: [ :issue | issue id = workload issue id ]
+			ifOne: [ :issue | workload issue: issue ] ].
+	self model addAll: worklogsToLoad"
+]
+
+{ #category : #'api - import' }
 JiraPharoImporter >> loadIssues: issues [
 
 	| issuesToLoad |
@@ -72,7 +90,8 @@ JiraPharoImporter >> loadIssues: issues [
 			                :issue | issue id = issueProposedForImmport id ] ].
 	self model addAll: issuesToLoad.
 	self loadTypeForIssuesToLoad: issuesToLoad.
-	self loadWorklogsForIssuesToLoad: issuesToLoad
+	self loadWorklogsForIssuesToLoad: issuesToLoad.
+	self loadCreatorForIssuesToLoad: issuesToLoad
 ]
 
 { #category : #'api - import' }

@@ -5,9 +5,9 @@ JPIssue >> mooseNameOn: aStream [
 
 	aStream
 		nextPutAll: '(';
-		nextPutAll: self key;
+		nextPutAll: (self key ifNil: [ 'no key' ]);
 		nextPutAll: ') ';
-		nextPutAll: self summary
+		nextPutAll: (self summary ifNil: [ 'no summary' ])
 ]
 
 { #category : #'*JiraPharoAPI-Model-Extended' }

@@ -22,6 +22,25 @@ JiraPharoImporterTest >> setUp [
 ]
 
 { #category : #test }
+JiraPharoImporterTest >> testLoadCreatorForIssuesToLoad [
+
+	| issue creator |
+	issue := JPIssue new
+		         id: 1;
+		 description: 'Issue 1';
+		         yourself.
+	creator := JPUser new
+		           accountId: 12;
+		           yourself.
+	issue creator: creator.
+
+	jpImporter loadCreatorForIssuesToLoad: { issue }.
+	self assert: model size equals: 1.
+	self assert: model first equals: creator.
+	self assert: issue creator equals: creator
+]
+
+{ #category : #test }
 JiraPharoImporterTest >> testLoadIssues [
 
 	self assert: model size equals: 0.
@@ -67,6 +86,7 @@ JiraPharoImporterTest >> testLoadIssuesWithWorklog [
 	| issue worklog |
 	issue := JPIssue new
 		         id: 1;
+		         description: 'Issue 1';
 		         yourself.
 	worklog := JPWorklog new
 		           id: 12;
@@ -116,6 +136,7 @@ JiraPharoImporterTest >> testLoadWorklogsForIssuesToLoad [
 	| issue worklog |
 	issue := JPIssue new
 		         id: 1;
+		         description: 'Issue 1';
 		         yourself.
 	worklog := JPWorklog new
 		           id: 12;
@@ -133,10 +154,12 @@ JiraPharoImporterTest >> testLoadWorklogsForIssuesToLoadIssueIsAlreadyExistingBu
 	| issue worklog issueB |
 	issue := JPIssue new
 		         id: 1;
+		 description: 'Issue 1';
 		         yourself.
 	model add: issue.
 	issueB := JPIssue new
 		         id: 1;
+		 description: 'Issue 1';
 		         yourself.
 	worklog := JPWorklog new
 		           id: 12;
