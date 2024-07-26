@@ -25,13 +25,13 @@ Class {
 	#name : #JPIssueType,
 	#superclass : #JPEntity,
 	#instVars : [
-		'#avatarId => FMProperty',
+		'#id => FMProperty',
 		'#description => FMProperty',
 		'#iconUrl => FMProperty',
-		'#id => FMProperty',
-		'#issues => FMMany type: #JPIssue opposite: #type',
 		'#name => FMProperty',
-		'#subtask => FMProperty'
+		'#subtask => FMProperty',
+		'#avatarId => FMProperty',
+		'#issues => FMMany type: #JPIssue opposite: #type'
 	],
 	#category : #'JiraPharoAPI-Model-Entities'
 }

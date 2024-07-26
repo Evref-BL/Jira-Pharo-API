@@ -26,12 +26,12 @@ Class {
 	#superclass : #JPEntity,
 	#instVars : [
 		'#accountId => FMProperty',
-		'#accountType => FMProperty',
-		'#createdIssues => FMMany type: #JPIssue opposite: #creator',
 		'#displayName => FMProperty',
 		'#emailAddress => FMProperty',
-		'#issuesAssigned => FMMany type: #JPIssue opposite: #assignee',
-		'#name => FMProperty'
+		'#name => FMProperty',
+		'#accountType => FMProperty',
+		'#createdIssues => FMMany type: #JPIssue opposite: #creator',
+		'#issuesAssigned => FMMany type: #JPIssue opposite: #assignee'
 	],
 	#category : #'JiraPharoAPI-Model-Entities'
 }

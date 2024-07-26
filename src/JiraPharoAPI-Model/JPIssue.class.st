@@ -34,18 +34,18 @@ Class {
 	#name : #JPIssue,
 	#superclass : #JPEntity,
 	#instVars : [
-		'#assignee => FMOne type: #JPUser opposite: #issuesAssigned',
-		'#components => FMMany type: #JPComponent opposite: #issue',
-		'#created => FMProperty',
-		'#creator => FMOne type: #JPUser opposite: #createdIssues',
 		'#description => FMProperty',
-		'#id => FMProperty',
-		'#key => FMProperty',
-		'#labels => FMProperty',
 		'#summary => FMProperty',
+		'#key => FMProperty',
+		'#id => FMProperty',
+		'#created => FMProperty',
 		'#timespent => FMProperty',
+		'#labels => FMProperty',
+		'#components => FMMany type: #JPComponent opposite: #issue',
+		'#worklogs => FMMany type: #JPWorklog opposite: #issue',
 		'#type => FMOne type: #JPIssueType opposite: #issues',
-		'#worklogs => FMMany type: #JPWorklog opposite: #issue'
+		'#creator => FMOne type: #JPUser opposite: #createdIssues',
+		'#assignee => FMOne type: #JPUser opposite: #issuesAssigned'
 	],
 	#category : #'JiraPharoAPI-Model-Entities'
 }
