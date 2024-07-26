@@ -22,6 +22,25 @@ JiraPharoImporterTest >> setUp [
 ]
 
 { #category : #test }
+JiraPharoImporterTest >> testLoadAssigneeForIssuesToLoad [
+
+	| issue assignee |
+	issue := JPIssue new
+		         id: 1;
+		         description: 'Issue 1';
+		         yourself.
+	assignee := JPUser new
+		            accountId: 12;
+		            yourself.
+	issue assignee: assignee.
+
+	jpImporter loadAssigneeForIssuesToLoad: { issue }.
+	self assert: model size equals: 1.
+	self assert: model first equals: assignee.
+	self assert: issue assignee equals: assignee
+]
+
+{ #category : #test }
 JiraPharoImporterTest >> testLoadCreatorForIssuesToLoad [
 
 	| issue creator |
@@ -38,6 +57,31 @@ JiraPharoImporterTest >> testLoadCreatorForIssuesToLoad [
 	self assert: model size equals: 1.
 	self assert: model first equals: creator.
 	self assert: issue creator equals: creator
+]
+
+{ #category : #test }
+JiraPharoImporterTest >> testLoadIssueWithSameUserAssignedAndCreator [
+
+	| issue assignee creator user |
+	issue := JPIssue new
+		         id: 1;
+		         description: 'Issue 1';
+		         yourself.
+	assignee := JPUser new
+		            accountId: 12;
+		            yourself.
+	creator := JPUser new
+		           accountId: 12;
+		           yourself.
+	issue assignee: assignee.
+	issue creator: creator.
+
+	jpImporter loadIssues: { issue }.
+	self assert: model size equals: 2.
+	self assert: (model allWithType: JPUser) size equals: 1.
+	user := (model allWithType: JPUser) first.
+	self assert: issue creator equals: user.
+	self assert: issue assignee equals: user
 ]
 
 { #category : #test }
@@ -158,6 +202,41 @@ JiraPharoImporterTest >> testLoadSameIssueTwoTimes [
 			 id: 1;
 			 yourself) }.
 	self assert: model size equals: 1
+]
+
+{ #category : #test }
+JiraPharoImporterTest >> testLoadTwoIssuesWithSameAssigneeComplete [
+
+	| issue issueB assignee assigneeB |
+	issue := JPIssue new
+		         id: 1;
+		         description: 'Issue 1';
+		         yourself.
+	issueB := JPIssue new
+		          id: 1;
+		          description: 'Issue 1';
+		          yourself.
+	assignee := JPUser new
+		           accountId: 12;
+		           displayName: 'John Doe';
+		           yourself.
+	assigneeB := JPUser new
+		            accountId: 12;
+		            displayName: 'John Doe';
+		            yourself.
+	issue assignee: assignee.
+	issueB assignee: assigneeB.
+
+	jpImporter loadIssues: {
+			issue.
+			issueB }.
+	self assert: model size equals: 3.
+	self assert: (model allWithType: JPUser) size equals: 1.
+	self
+		assert: (model allWithType: JPUser) first issuesAssigned size
+		equals: 2.
+	self assert: (model allWithType: JPIssue) size equals: 2.
+	self assert: issue assignee identicalTo: issueB assignee
 ]
 
 { #category : #test }

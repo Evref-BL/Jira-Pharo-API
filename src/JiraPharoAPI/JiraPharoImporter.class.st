@@ -64,6 +64,23 @@ JiraPharoImporter >> importAllIssuesOf: aUsername [
 ]
 
 { #category : #'api - import' }
+JiraPharoImporter >> loadAssigneeForIssuesToLoad: issuesToLoad [
+
+	| assigneeToLoad |
+	assigneeToLoad := issuesToLoad iterator
+	                  | [ :issue | issue assignee ] collectIt
+	                  | [ :assignee | assignee isNil ] rejectIt
+	                  |
+	                  [ :assignee | self model includes: assignee ]
+		                  rejectIt > Set.
+	assigneeToLoad do: [ :assignee |
+		(self model allWithType: JPIssue)
+			select: [ :issue | issue assignee = assignee ]
+			thenDo: [ :issue | issue assignee: assignee ] ].
+	self model addAll: assigneeToLoad
+]
+
+{ #category : #'api - import' }
 JiraPharoImporter >> loadCreatorForIssuesToLoad: issuesToLoad [
 
 	| creatorsToLoad |
@@ -90,7 +107,8 @@ JiraPharoImporter >> loadIssues: issues [
 	self model addAll: issuesToLoad.
 	self loadTypeForIssuesToLoad: issuesToLoad.
 	self loadWorklogsForIssuesToLoad: issuesToLoad.
-	self loadCreatorForIssuesToLoad: issuesToLoad
+	self loadCreatorForIssuesToLoad: issuesToLoad.
+	self loadAssigneeForIssuesToLoad: issuesToLoad
 ]
 
 { #category : #'api - import' }
