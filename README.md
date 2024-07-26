@@ -40,7 +40,24 @@ jpAPI beHttps.
 jpAPI bearerToken: '<Your personal token>'.
 ```
 
-## Example 
+## Example with Moose
+
+This project comes with an integration to the Moose environment.
+It comes with a specific importer for this purpose that simply the data analysis.
+
+### Import the issues assigned to a user in moose
+
+```st
+jpImporter := JiraPharoImporter new
+  model: JPModel new;
+  api: jpAPI;
+  yourself.
+
+jpImporter importAllIssuesOf: '<email of user>'.
+jpImporter model
+```
+
+## Example API only
 
 ### Get information about one issue
 
