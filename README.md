@@ -1,5 +1,8 @@
 # Jira-Pharo-API
 
+[![Continuous](https://github.com/Evref-BL/Jira-Pharo-API/actions/workflows/continuous.yml/badge.svg)](https://github.com/Evref-BL/Jira-Pharo-API/actions/workflows/continuous.yml)
+[![Coverage Status](https://coveralls.io/repos/github/Evref-BL/Jira-Pharo-API/badge.svg?branch=main)](https://coveralls.io/github/Evref-BL/Jira-Pharo-API?branch=main)
+
 This is a client for the [Jira REST API](https://developer.atlassian.com/cloud/jira/platform/rest/v2/intro/#about).
 
 ## Installation 
