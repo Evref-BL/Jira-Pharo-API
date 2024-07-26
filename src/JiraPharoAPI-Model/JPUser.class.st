@@ -1,4 +1,14 @@
 "
+## Relations
+======================
+
+### Children
+| Relation | Origin | Opposite | Type | Comment |
+|---|
+| `createdIssues` | `JPUser` | `creator` | `JPIssue` | |
+| `issuesAssigned` | `JPUser` | `assignee` | `JPIssue` | |
+
+
 ## Properties
 ======================
 
@@ -16,10 +26,12 @@ Class {
 	#superclass : #JPEntity,
 	#instVars : [
 		'#accountId => FMProperty',
+		'#accountType => FMProperty',
+		'#createdIssues => FMMany type: #JPIssue opposite: #creator',
 		'#displayName => FMProperty',
 		'#emailAddress => FMProperty',
-		'#name => FMProperty',
-		'#accountType => FMProperty'
+		'#issuesAssigned => FMMany type: #JPIssue opposite: #assignee',
+		'#name => FMProperty'
 	],
 	#category : #'JiraPharoAPI-Model-Entities'
 }
@@ -61,6 +73,41 @@ JPUser >> accountType: anObject [
 	accountType := anObject
 ]
 
+{ #category : #adding }
+JPUser >> addCreatedIssue: anObject [
+	<generated>
+	^ self createdIssues add: anObject
+]
+
+{ #category : #adding }
+JPUser >> addIssuesAssigned: anObject [
+	<generated>
+	^ self issuesAssigned add: anObject
+]
+
+{ #category : #accessing }
+JPUser >> createdIssues [
+	"Relation named: #createdIssues type: #JPIssue opposite: #creator"
+
+	<generated>
+	<derived>
+	^ createdIssues
+]
+
+{ #category : #accessing }
+JPUser >> createdIssues: anObject [
+
+	<generated>
+	createdIssues value: anObject
+]
+
+{ #category : #navigation }
+JPUser >> createdIssuesGroup [
+	<generated>
+	<navigation: 'CreatedIssues'>
+	^ MooseSpecializedGroup withAll: self createdIssues asSet
+]
+
 { #category : #accessing }
 JPUser >> displayName [
 
@@ -87,6 +134,29 @@ JPUser >> emailAddress [
 JPUser >> emailAddress: anObject [
 	<generated>
 	emailAddress := anObject
+]
+
+{ #category : #accessing }
+JPUser >> issuesAssigned [
+	"Relation named: #issuesAssigned type: #JPIssue opposite: #assignee"
+
+	<generated>
+	<derived>
+	^ issuesAssigned
+]
+
+{ #category : #accessing }
+JPUser >> issuesAssigned: anObject [
+
+	<generated>
+	issuesAssigned value: anObject
+]
+
+{ #category : #navigation }
+JPUser >> issuesAssignedGroup [
+	<generated>
+	<navigation: 'IssuesAssigned'>
+	^ MooseSpecializedGroup withAll: self issuesAssigned asSet
 ]
 
 { #category : #accessing }

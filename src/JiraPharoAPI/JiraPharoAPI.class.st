@@ -159,7 +159,14 @@ JiraPharoAPI >> configureReaderForJiraIssue: reader [
 							 cmp at: #id ifPresent: [ :t | localComponent id: t ].
 							 cmp at: #name ifPresent: [ :t | localComponent name: t ].
 
-							 localComponent ]) ] ] ]
+							 localComponent ]) ].
+				value
+					at: #creator
+					ifPresent: [ :author |
+					pharoIssue creator: (JPUser fromDictionary: author) ].
+				value at: #assignee ifPresent: [ :assignee |
+					assignee ifNotNil: [
+						pharoIssue assignee: (JPUser fromDictionary: assignee) ] ] ] ]
 ]
 
 { #category : #'api - issue search' }

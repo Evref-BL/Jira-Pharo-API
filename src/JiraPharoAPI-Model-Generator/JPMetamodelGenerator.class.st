@@ -92,5 +92,7 @@ JPMetamodelGenerator >> defineRelations [
 	super defineRelations.
 	(issue property: #components) -* (component property: #issue).
 	(issue property: #worklogs) -* (worklog property: #issue).
-	(issue property: #type) *- (issueType property: #issues)
+	(issue property: #type) *- (issueType property: #issues).
+	(issue property: #creator) *-<> (user property: #createdIssues).
+	(issue property: #assignee) *-<> (user property: #issuesAssigned)
 ]

@@ -2,6 +2,12 @@
 ## Relations
 ======================
 
+### Parents
+| Relation | Origin | Opposite | Type | Comment |
+|---|
+| `assignee` | `JPIssue` | `issuesAssigned` | `JPUser` | |
+| `creator` | `JPIssue` | `createdIssues` | `JPUser` | |
+
 ### Other
 | Relation | Origin | Opposite | Type | Comment |
 |---|
@@ -28,8 +34,10 @@ Class {
 	#name : #JPIssue,
 	#superclass : #JPEntity,
 	#instVars : [
+		'#assignee => FMOne type: #JPUser opposite: #issuesAssigned',
 		'#components => FMMany type: #JPComponent opposite: #issue',
 		'#created => FMProperty',
+		'#creator => FMOne type: #JPUser opposite: #createdIssues',
 		'#description => FMProperty',
 		'#id => FMProperty',
 		'#key => FMProperty',
@@ -64,6 +72,29 @@ JPIssue >> addWorklog: anObject [
 ]
 
 { #category : #accessing }
+JPIssue >> assignee [
+	"Relation named: #assignee type: #JPUser opposite: #issuesAssigned"
+
+	<generated>
+	<container>
+	^ assignee
+]
+
+{ #category : #accessing }
+JPIssue >> assignee: anObject [
+
+	<generated>
+	assignee := anObject
+]
+
+{ #category : #navigation }
+JPIssue >> assigneeGroup [
+	<generated>
+	<navigation: 'Assignee'>
+	^ MooseSpecializedGroup with: self assignee
+]
+
+{ #category : #accessing }
 JPIssue >> components [
 	"Relation named: #components type: #JPComponent opposite: #issue"
 
@@ -91,6 +122,29 @@ JPIssue >> created [
 JPIssue >> created: anObject [
 	<generated>
 	created := anObject
+]
+
+{ #category : #accessing }
+JPIssue >> creator [
+	"Relation named: #creator type: #JPUser opposite: #createdIssues"
+
+	<generated>
+	<container>
+	^ creator
+]
+
+{ #category : #accessing }
+JPIssue >> creator: anObject [
+
+	<generated>
+	creator := anObject
+]
+
+{ #category : #navigation }
+JPIssue >> creatorGroup [
+	<generated>
+	<navigation: 'Creator'>
+	^ MooseSpecializedGroup with: self creator
 ]
 
 { #category : #accessing }
