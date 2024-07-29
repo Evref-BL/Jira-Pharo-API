@@ -27,6 +27,16 @@ JiraPharoImporter >> api: anObject [
 ]
 
 { #category : 'api - import' }
+JiraPharoImporter >> ensureProject: aPotentialProject [
+	"Search is user is already in model"
+
+	(self model allWithType: JPProject)
+		detect: [ :project | project = aPotentialProject ]
+		ifOne: [ :projectFromModel | ^ projectFromModel ].
+	^ self model add: aPotentialProject
+]
+
+{ #category : 'api - import' }
 JiraPharoImporter >> ensureUser: aPotentialUser [
 	"Search is user is already in model"
 
@@ -111,7 +121,17 @@ JiraPharoImporter >> loadIssues: issues [
 	self loadTypeForIssuesToLoad: issuesToLoad.
 	self loadWorklogsForIssuesToLoad: issuesToLoad.
 	self loadCreatorForIssuesToLoad: issuesToLoad.
-	self loadAssigneeForIssuesToLoad: issuesToLoad
+	self loadAssigneeForIssuesToLoad: issuesToLoad.
+	self loadProjectForIssuesToLoad: issuesToLoad
+]
+
+{ #category : 'api - import' }
+JiraPharoImporter >> loadProjectForIssuesToLoad: issuesToLoad [
+
+	issuesToLoad
+		reject: [ :issue | issue project isNil ]
+		thenDo: [ :issue |
+		issue project: (self ensureProject: issue project) ]
 ]
 
 { #category : 'api - import' }

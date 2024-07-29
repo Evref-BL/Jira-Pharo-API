@@ -1,6 +1,6 @@
 Class {
-	#name : #JiraPharoIssueSearchResult,
-	#superclass : #Object,
+	#name : 'JiraPharoIssueSearchResult',
+	#superclass : 'Object',
 	#instVars : [
 		'expand',
 		'startAt',
@@ -8,64 +8,65 @@ Class {
 		'total',
 		'issues'
 	],
-	#category : #'JiraPharoAPI-Model'
+	#category : 'JiraPharoAPI-Model',
+	#package : 'JiraPharoAPI-Model'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JiraPharoIssueSearchResult >> expand [
 
 	^ expand
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JiraPharoIssueSearchResult >> expand: anObject [
 
 	expand := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JiraPharoIssueSearchResult >> issues [
 
 	^ issues
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JiraPharoIssueSearchResult >> issues: anObject [
 
 	issues := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JiraPharoIssueSearchResult >> maxResults [
 
 	^ maxResults
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JiraPharoIssueSearchResult >> maxResults: anObject [
 
 	maxResults := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JiraPharoIssueSearchResult >> startAt [
 
 	^ startAt
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JiraPharoIssueSearchResult >> startAt: anObject [
 
 	startAt := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JiraPharoIssueSearchResult >> total [
 
 	^ total
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JiraPharoIssueSearchResult >> total: anObject [
 
 	total := anObject

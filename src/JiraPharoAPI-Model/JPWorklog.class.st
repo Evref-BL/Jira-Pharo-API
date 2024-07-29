@@ -23,8 +23,8 @@
 
 "
 Class {
-	#name : #JPWorklog,
-	#superclass : #JPEntity,
+	#name : 'JPWorklog',
+	#superclass : 'JPEntity',
 	#instVars : [
 		'#created => FMProperty',
 		'#updated => FMProperty',
@@ -35,10 +35,12 @@ Class {
 		'#updateAuthor => FMProperty',
 		'#issue => FMOne type: #JPIssue opposite: #worklogs'
 	],
-	#category : #'JiraPharoAPI-Model-Entities'
+	#category : 'JiraPharoAPI-Model-Entities',
+	#package : 'JiraPharoAPI-Model',
+	#tag : 'Entities'
 }
 
-{ #category : #meta }
+{ #category : 'meta' }
 JPWorklog class >> annotation [
 
 	<FMClass: #Worklog super: #JPEntity>
@@ -47,14 +49,14 @@ JPWorklog class >> annotation [
 	^ self
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 JPWorklog >> = aJPWorklog [
 
 	<generated>
 	^ aJPWorklog id = self id
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JPWorklog >> author [
 
 	<FMProperty: #author type: #Object>
@@ -62,13 +64,13 @@ JPWorklog >> author [
 	^ author
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JPWorklog >> author: anObject [
 	<generated>
 	author := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JPWorklog >> created [
 
 	<FMProperty: #created type: #Object>
@@ -76,20 +78,20 @@ JPWorklog >> created [
 	^ created
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JPWorklog >> created: anObject [
 	<generated>
 	created := anObject
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 JPWorklog >> hash [
 
 	<generated>
 	^ self id hash 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JPWorklog >> id [
 
 	<FMProperty: #id type: #Number>
@@ -97,13 +99,13 @@ JPWorklog >> id [
 	^ id
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JPWorklog >> id: anObject [
 	<generated>
 	id := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JPWorklog >> issue [
 	"Relation named: #issue type: #JPIssue opposite: #worklogs"
 
@@ -111,14 +113,14 @@ JPWorklog >> issue [
 	^ issue
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JPWorklog >> issue: anObject [
 
 	<generated>
 	issue := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JPWorklog >> started [
 
 	<FMProperty: #started type: #Object>
@@ -126,13 +128,13 @@ JPWorklog >> started [
 	^ started
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JPWorklog >> started: anObject [
 	<generated>
 	started := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JPWorklog >> timespent [
 
 	<FMProperty: #timespent type: #Object>
@@ -140,13 +142,13 @@ JPWorklog >> timespent [
 	^ timespent
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JPWorklog >> timespent: anObject [
 	<generated>
 	timespent := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JPWorklog >> updateAuthor [
 
 	<FMProperty: #updateAuthor type: #Object>
@@ -154,13 +156,13 @@ JPWorklog >> updateAuthor [
 	^ updateAuthor
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JPWorklog >> updateAuthor: anObject [
 	<generated>
 	updateAuthor := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JPWorklog >> updated [
 
 	<FMProperty: #updated type: #Object>
@@ -168,7 +170,7 @@ JPWorklog >> updated [
 	^ updated
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JPWorklog >> updated: anObject [
 	<generated>
 	updated := anObject

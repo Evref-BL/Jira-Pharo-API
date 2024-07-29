@@ -1,6 +1,6 @@
 Class {
-	#name : #JPMetamodelGenerator,
-	#superclass : #FamixMetamodelGenerator,
+	#name : 'JPMetamodelGenerator',
+	#superclass : 'FamixMetamodelGenerator',
 	#instVars : [
 		'component',
 		'issue',
@@ -9,22 +9,23 @@ Class {
 		'worklog',
 		'user'
 	],
-	#category : #'JiraPharoAPI-Model-Generator'
+	#category : 'JiraPharoAPI-Model-Generator',
+	#package : 'JiraPharoAPI-Model-Generator'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JPMetamodelGenerator class >> packageName [
 
 	^ #'JiraPharoAPI-Model'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JPMetamodelGenerator class >> prefix [
 
 	^ #JP
 ]
 
-{ #category : #definition }
+{ #category : 'definition' }
 JPMetamodelGenerator >> defineClasses [
 
 	super defineClasses.
@@ -37,13 +38,13 @@ JPMetamodelGenerator >> defineClasses [
 	user := builder newClassNamed: 'User'.
 ]
 
-{ #category : #definition }
+{ #category : 'definition' }
 JPMetamodelGenerator >> defineHierarchy [
 
 	super defineHierarchy.
 ]
 
-{ #category : #definition }
+{ #category : 'definition' }
 JPMetamodelGenerator >> defineProperties [
 
 	super defineProperties.
@@ -69,6 +70,7 @@ JPMetamodelGenerator >> defineProperties [
 	project property: #id type: #Number.
 	project property: #name type: #String.
 	project property: #key type: #String.
+	project withEqualityCheckOn: { #id }.
 
 	worklog property: #created type: #Object.
 	worklog property: #updated type: #Object.
@@ -87,7 +89,7 @@ JPMetamodelGenerator >> defineProperties [
 	user withEqualityCheckOn: { #accountId }.
 ]
 
-{ #category : #definition }
+{ #category : 'definition' }
 JPMetamodelGenerator >> defineRelations [
 
 	super defineRelations.
@@ -95,5 +97,6 @@ JPMetamodelGenerator >> defineRelations [
 	(issue property: #worklogs) -* (worklog property: #issue).
 	(issue property: #type) *- (issueType property: #issues).
 	(issue property: #creator) *-<> (user property: #createdIssues).
-	(issue property: #assignee) *-<> (user property: #issuesAssigned)
+	(issue property: #assignee) *-<> (user property: #issuesAssigned).
+	(issue property: #project) *-<> (project property: #issues)
 ]

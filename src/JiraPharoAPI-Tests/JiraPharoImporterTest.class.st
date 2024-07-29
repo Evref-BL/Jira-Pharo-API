@@ -2,16 +2,17 @@
 A JiraPharoImporterTest is a test class for testing the behavior of JiraPharoImporter
 "
 Class {
-	#name : #JiraPharoImporterTest,
-	#superclass : #TestCase,
+	#name : 'JiraPharoImporterTest',
+	#superclass : 'TestCase',
 	#instVars : [
 		'model',
 		'jpImporter'
 	],
-	#category : #'JiraPharoAPI-Tests'
+	#category : 'JiraPharoAPI-Tests',
+	#package : 'JiraPharoAPI-Tests'
 }
 
-{ #category : #test }
+{ #category : 'test' }
 JiraPharoImporterTest >> setUp [
 
 	super setUp.
@@ -21,7 +22,34 @@ JiraPharoImporterTest >> setUp [
 		              yourself
 ]
 
-{ #category : #test }
+{ #category : 'test' }
+JiraPharoImporterTest >> testEnsureProject [
+
+	| user createdUser |
+	user := JPProject new
+		        id: 12;
+		        yourself.
+	createdUser := jpImporter ensureProject: user.
+	self assert: createdUser identicalTo: user
+]
+
+{ #category : 'test' }
+JiraPharoImporterTest >> testEnsureProjectAlreadyExisting [
+
+	| project createdProject projectB |
+	project := JPProject new
+		           id: 12;
+		           yourself.
+	model add: project.
+	projectB := JPProject new
+		            id: 12;
+		            yourself.
+	createdProject := jpImporter ensureProject: projectB.
+	self assert: createdProject identicalTo: project.
+	self deny: createdProject identicalTo: projectB
+]
+
+{ #category : 'test' }
 JiraPharoImporterTest >> testEnsureUser [
 
 	| user createdUser |
@@ -32,7 +60,7 @@ JiraPharoImporterTest >> testEnsureUser [
 	self assert: createdUser identicalTo: user
 ]
 
-{ #category : #test }
+{ #category : 'test' }
 JiraPharoImporterTest >> testEnsureUserAlreadyExisting [
 
 	| user createdUser userB |
@@ -48,7 +76,7 @@ JiraPharoImporterTest >> testEnsureUserAlreadyExisting [
 	self deny: createdUser identicalTo: userB
 ]
 
-{ #category : #test }
+{ #category : 'test' }
 JiraPharoImporterTest >> testLoadAssigneeForIssuesToLoad [
 
 	| issue assignee |
@@ -67,7 +95,7 @@ JiraPharoImporterTest >> testLoadAssigneeForIssuesToLoad [
 	self assert: issue assignee equals: assignee
 ]
 
-{ #category : #test }
+{ #category : 'test' }
 JiraPharoImporterTest >> testLoadCreatorForIssuesToLoad [
 
 	| issue creator |
@@ -86,7 +114,7 @@ JiraPharoImporterTest >> testLoadCreatorForIssuesToLoad [
 	self assert: issue creator equals: creator
 ]
 
-{ #category : #test }
+{ #category : 'test' }
 JiraPharoImporterTest >> testLoadIssueWithSameUserAssignedAndCreator [
 
 	| issue assignee creator user |
@@ -111,7 +139,7 @@ JiraPharoImporterTest >> testLoadIssueWithSameUserAssignedAndCreator [
 	self assert: issue assignee equals: user
 ]
 
-{ #category : #test }
+{ #category : 'test' }
 JiraPharoImporterTest >> testLoadIssues [
 
 	self assert: model size equals: 0.
@@ -119,7 +147,7 @@ JiraPharoImporterTest >> testLoadIssues [
 	self assert: model size equals: 1.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 JiraPharoImporterTest >> testLoadIssuesWithSameType [
 
 	| issueA issueB issueTypeA issueTypeB selectedIssueBySet |
@@ -151,7 +179,7 @@ JiraPharoImporterTest >> testLoadIssuesWithSameType [
 	self assert: selectedIssueBySet issues size equals: 2
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 JiraPharoImporterTest >> testLoadIssuesWithSameTypeTypeHaveReferences [
 
 	| issueA issueB issueTypeA issueTypeB |
@@ -181,7 +209,7 @@ JiraPharoImporterTest >> testLoadIssuesWithSameTypeTypeHaveReferences [
 		equals: 2
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 JiraPharoImporterTest >> testLoadIssuesWithWorklog [
 
 	| issue worklog |
@@ -199,7 +227,7 @@ JiraPharoImporterTest >> testLoadIssuesWithWorklog [
 	self assert: issue worklogs first equals: worklog
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 JiraPharoImporterTest >> testLoadOneIssueWithAIssueType [
 
 	| issueA issueTypeA |
@@ -218,7 +246,25 @@ JiraPharoImporterTest >> testLoadOneIssueWithAIssueType [
 	self assert: (model allWithType: JPIssueType) size equals: 1
 ]
 
-{ #category : #test }
+{ #category : 'tests' }
+JiraPharoImporterTest >> testLoadProjectForIssuesToLoad [
+
+	| issue project |
+	issue := JPIssue new
+		         id: 1;
+		         description: 'Issue 1';
+		         yourself.
+	project := JPProject new
+		           id: 12;
+		           yourself.
+	issue project: project.
+
+	jpImporter loadProjectForIssuesToLoad: { issue }.
+	self assert: model size equals: 1.
+	self assert: issue project equals: project
+]
+
+{ #category : 'test' }
 JiraPharoImporterTest >> testLoadSameIssueTwoTimes [
 
 	jpImporter loadIssues: { (JPIssue new
@@ -231,7 +277,7 @@ JiraPharoImporterTest >> testLoadSameIssueTwoTimes [
 	self assert: model size equals: 1
 ]
 
-{ #category : #test }
+{ #category : 'test' }
 JiraPharoImporterTest >> testLoadTwoIssuesWithSameAssigneeComplete [
 
 	| issue issueB assignee assigneeB |
@@ -266,7 +312,7 @@ JiraPharoImporterTest >> testLoadTwoIssuesWithSameAssigneeComplete [
 	self assert: issue assignee identicalTo: issueB assignee
 ]
 
-{ #category : #test }
+{ #category : 'test' }
 JiraPharoImporterTest >> testLoadTwoIssuesWithSameAuthor [
 
 	| issue creator issueB |
@@ -290,7 +336,7 @@ JiraPharoImporterTest >> testLoadTwoIssuesWithSameAuthor [
 	self assert: issue creator equals: creator
 ]
 
-{ #category : #test }
+{ #category : 'test' }
 JiraPharoImporterTest >> testLoadTwoIssuesWithSameAuthorComplete [
 
 	| issue creator issueB creatorB |
@@ -325,7 +371,7 @@ JiraPharoImporterTest >> testLoadTwoIssuesWithSameAuthorComplete [
 	self assert: issue creator identicalTo: issueB creator
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 JiraPharoImporterTest >> testLoadWorklogsForIssuesToLoad [
 
 	| issue worklog |
@@ -343,7 +389,7 @@ JiraPharoImporterTest >> testLoadWorklogsForIssuesToLoad [
 	self assert: issue worklogs first equals: worklog
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 JiraPharoImporterTest >> testLoadWorklogsForIssuesToLoadIssueIsAlreadyExistingButNotWorklog [
 
 	| issue worklog issueB |

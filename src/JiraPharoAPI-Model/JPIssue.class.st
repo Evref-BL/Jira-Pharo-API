@@ -7,6 +7,7 @@
 |---|
 | `assignee` | `JPIssue` | `issuesAssigned` | `JPUser` | |
 | `creator` | `JPIssue` | `createdIssues` | `JPUser` | |
+| `project` | `JPIssue` | `issues` | `JPProject` | |
 
 ### Other
 | Relation | Origin | Opposite | Type | Comment |
@@ -31,26 +32,29 @@
 
 "
 Class {
-	#name : #JPIssue,
-	#superclass : #JPEntity,
+	#name : 'JPIssue',
+	#superclass : 'JPEntity',
 	#instVars : [
-		'#description => FMProperty',
-		'#summary => FMProperty',
-		'#key => FMProperty',
-		'#id => FMProperty',
-		'#created => FMProperty',
-		'#timespent => FMProperty',
-		'#labels => FMProperty',
+		'#assignee => FMOne type: #JPUser opposite: #issuesAssigned',
 		'#components => FMMany type: #JPComponent opposite: #issue',
-		'#worklogs => FMMany type: #JPWorklog opposite: #issue',
-		'#type => FMOne type: #JPIssueType opposite: #issues',
+		'#created => FMProperty',
 		'#creator => FMOne type: #JPUser opposite: #createdIssues',
-		'#assignee => FMOne type: #JPUser opposite: #issuesAssigned'
+		'#description => FMProperty',
+		'#id => FMProperty',
+		'#key => FMProperty',
+		'#labels => FMProperty',
+		'#project => FMOne type: #JPProject opposite: #issues',
+		'#summary => FMProperty',
+		'#timespent => FMProperty',
+		'#type => FMOne type: #JPIssueType opposite: #issues',
+		'#worklogs => FMMany type: #JPWorklog opposite: #issue'
 	],
-	#category : #'JiraPharoAPI-Model-Entities'
+	#category : 'JiraPharoAPI-Model-Entities',
+	#package : 'JiraPharoAPI-Model',
+	#tag : 'Entities'
 }
 
-{ #category : #meta }
+{ #category : 'meta' }
 JPIssue class >> annotation [
 
 	<FMClass: #Issue super: #JPEntity>
@@ -59,19 +63,19 @@ JPIssue class >> annotation [
 	^ self
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 JPIssue >> addComponent: anObject [
 	<generated>
 	^ self components add: anObject
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 JPIssue >> addWorklog: anObject [
 	<generated>
 	^ self worklogs add: anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JPIssue >> assignee [
 	"Relation named: #assignee type: #JPUser opposite: #issuesAssigned"
 
@@ -80,21 +84,21 @@ JPIssue >> assignee [
 	^ assignee
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JPIssue >> assignee: anObject [
 
 	<generated>
 	assignee := anObject
 ]
 
-{ #category : #navigation }
+{ #category : 'navigation' }
 JPIssue >> assigneeGroup [
 	<generated>
 	<navigation: 'Assignee'>
 	^ MooseSpecializedGroup with: self assignee
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JPIssue >> components [
 	"Relation named: #components type: #JPComponent opposite: #issue"
 
@@ -103,14 +107,14 @@ JPIssue >> components [
 	^ components
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JPIssue >> components: anObject [
 
 	<generated>
 	components value: anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JPIssue >> created [
 
 	<FMProperty: #created type: #Object>
@@ -118,13 +122,13 @@ JPIssue >> created [
 	^ created
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JPIssue >> created: anObject [
 	<generated>
 	created := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JPIssue >> creator [
 	"Relation named: #creator type: #JPUser opposite: #createdIssues"
 
@@ -133,21 +137,21 @@ JPIssue >> creator [
 	^ creator
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JPIssue >> creator: anObject [
 
 	<generated>
 	creator := anObject
 ]
 
-{ #category : #navigation }
+{ #category : 'navigation' }
 JPIssue >> creatorGroup [
 	<generated>
 	<navigation: 'Creator'>
 	^ MooseSpecializedGroup with: self creator
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JPIssue >> description [
 
 	<FMProperty: #description type: #String>
@@ -155,13 +159,13 @@ JPIssue >> description [
 	^ description
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JPIssue >> description: anObject [
 	<generated>
 	description := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JPIssue >> id [
 
 	<FMProperty: #id type: #Number>
@@ -169,13 +173,13 @@ JPIssue >> id [
 	^ id
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JPIssue >> id: anObject [
 	<generated>
 	id := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JPIssue >> key [
 
 	<FMProperty: #key type: #String>
@@ -183,13 +187,13 @@ JPIssue >> key [
 	^ key
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JPIssue >> key: anObject [
 	<generated>
 	key := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JPIssue >> labels [
 
 	<FMProperty: #labels type: #Object>
@@ -197,13 +201,36 @@ JPIssue >> labels [
 	^ labels
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JPIssue >> labels: anObject [
 	<generated>
 	labels := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
+JPIssue >> project [
+	"Relation named: #project type: #JPProject opposite: #issues"
+
+	<generated>
+	<container>
+	^ project
+]
+
+{ #category : 'accessing' }
+JPIssue >> project: anObject [
+
+	<generated>
+	project := anObject
+]
+
+{ #category : 'navigation' }
+JPIssue >> projectGroup [
+	<generated>
+	<navigation: 'Project'>
+	^ MooseSpecializedGroup with: self project
+]
+
+{ #category : 'accessing' }
 JPIssue >> summary [
 
 	<FMProperty: #summary type: #String>
@@ -211,13 +238,13 @@ JPIssue >> summary [
 	^ summary
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JPIssue >> summary: anObject [
 	<generated>
 	summary := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JPIssue >> timespent [
 
 	<FMProperty: #timespent type: #Object>
@@ -225,13 +252,13 @@ JPIssue >> timespent [
 	^ timespent
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JPIssue >> timespent: anObject [
 	<generated>
 	timespent := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JPIssue >> type [
 	"Relation named: #type type: #JPIssueType opposite: #issues"
 
@@ -239,14 +266,14 @@ JPIssue >> type [
 	^ type
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JPIssue >> type: anObject [
 
 	<generated>
 	type := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JPIssue >> worklogs [
 	"Relation named: #worklogs type: #JPWorklog opposite: #issue"
 
@@ -255,7 +282,7 @@ JPIssue >> worklogs [
 	^ worklogs
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JPIssue >> worklogs: anObject [
 
 	<generated>
