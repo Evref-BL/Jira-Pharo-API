@@ -27,6 +27,16 @@ JiraPharoImporter >> api: anObject [
 ]
 
 { #category : 'api - import' }
+JiraPharoImporter >> ensureIssueType: aPotentialIssueType [
+	"Search is user is already in model"
+
+	(self model allWithType: JPIssueType)
+		detect: [ :issueType | issueType = aPotentialIssueType ]
+		ifOne: [ :issueTypeFromModel | ^ issueTypeFromModel ].
+	^ self model add: aPotentialIssueType
+]
+
+{ #category : 'api - import' }
 JiraPharoImporter >> ensureProject: aPotentialProject [
 	"Search is user is already in model"
 
@@ -128,18 +138,9 @@ JiraPharoImporter >> loadProjectForIssuesToLoad: issuesToLoad [
 { #category : 'api - import' }
 JiraPharoImporter >> loadTypeForIssuesToLoad: issuesToLoad [
 
-	| issueTypeToLoad |
-	issueTypeToLoad := issuesToLoad iterator
-	                   | [ :issue | issue type ] collectIt
-	                   | [ :issueType | issueType isNil ] rejectIt
-	                   |
-	                   [ :issueType | self model includes: issueType ]
-		                   rejectIt > Set.
-	issuesToLoad do: [ :issue |
-		issueTypeToLoad
-			detect: [ :ty | ty = issue type ]
-			ifOne: [ :ty | issue type: ty ] ].
-	self model addAll: issueTypeToLoad
+	issuesToLoad
+		reject: [ :issue | issue type isNil ]
+		thenDo: [ :issue | issue type: (self ensureIssueType: issue type) ]
 ]
 
 { #category : 'api - import' }

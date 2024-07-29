@@ -23,6 +23,33 @@ JiraPharoImporterTest >> setUp [
 ]
 
 { #category : 'tests' }
+JiraPharoImporterTest >> testEnsureIssueType [
+
+	| issueType createdIssueType |
+	issueType := JPIssueType new
+		             id: 12;
+		             yourself.
+	createdIssueType := jpImporter ensureIssueType: issueType.
+	self assert: createdIssueType identicalTo: issueType
+]
+
+{ #category : 'tests' }
+JiraPharoImporterTest >> testEnsureIssueTypeAlreadyExisting [
+
+	| issueType createdIssueType issueTypeB |
+	issueType := JPIssueType new
+		             id: 12;
+		             yourself.
+	model add: issueType.
+	issueTypeB := JPIssueType new
+		              id: 12;
+		              yourself.
+	createdIssueType := jpImporter ensureIssueType: issueTypeB.
+	self assert: createdIssueType identicalTo: issueType.
+	self deny: createdIssueType identicalTo: issueTypeB
+]
+
+{ #category : 'tests' }
 JiraPharoImporterTest >> testEnsureProject [
 
 	| user createdUser |
@@ -115,6 +142,24 @@ JiraPharoImporterTest >> testLoadCreatorForIssuesToLoad [
 ]
 
 { #category : 'tests' }
+JiraPharoImporterTest >> testLoadIssueTypeForIssuesToLoad [
+
+	| issue issueType |
+	issue := JPIssue new
+		         id: 1;
+		         description: 'Issue 1';
+		         yourself.
+	issueType := JPIssueType new
+		           id: 12;
+		           yourself.
+	issue type: issueType.
+
+	jpImporter loadTypeForIssuesToLoad: { issue }.
+	self assert: model size equals: 1.
+	self assert: issue type equals: issueType
+]
+
+{ #category : 'tests' }
 JiraPharoImporterTest >> testLoadIssueWithSameUserAssignedAndCreator [
 
 	| issue assignee creator user |
@@ -145,6 +190,38 @@ JiraPharoImporterTest >> testLoadIssues [
 	self assert: model size equals: 0.
 	jpImporter loadIssues: { JPIssue new id: 1; yourself }.
 	self assert: model size equals: 1.
+]
+
+{ #category : 'tests' }
+JiraPharoImporterTest >> testLoadIssuesInTwoStepsWithSameIssueType [
+
+	| issue issueB issueType issueTypeB |
+	issue := JPIssue new
+		         id: 1;
+		         description: 'Issue 1';
+		         yourself.
+	issueType := JPIssueType new
+		             id: 12;
+		             yourself.
+	issue type: issueType.
+
+	jpImporter loadIssues: { issue }.
+	self assert: model size equals: 2.
+	self assert: issue type equals: issueType.
+
+	issueB := JPIssue new
+		          id: 2;
+		          description: 'Issue 1';
+		          yourself.
+	issueTypeB := JPIssueType new
+		              id: 12;
+		              yourself.
+	issueB type: issueTypeB.
+
+	jpImporter loadIssues: { issueB }.
+	self assert: model size equals: 3.
+	self assert: issue type equals: issueType.
+	self assert: issueB type equals: issueType
 ]
 
 { #category : 'tests' }
