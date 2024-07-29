@@ -54,6 +54,9 @@ JPMetamodelGenerator >> defineProperties [
 	issue property: #id type: #Number.
 	issue property: #created type: #Object.
 	issue property: #timespent type: #Object.
+	issue property: #timeEstimate type: #Object.
+	issue property: #timeOriginalEstimate type: #Object.
+	issue property: #timespent type: #Object.
 	issue property: #labels type: #Object.
 
 	issueType property: #id type: #Number.
@@ -86,7 +89,7 @@ JPMetamodelGenerator >> defineProperties [
 	user property: #emailAddress type: #String.
 	user property: #name type: #String.
 	user property: #accountType type: #String.
-	user withEqualityCheckOn: { #accountId }.
+	user withEqualityCheckOn: { #accountId }
 ]
 
 { #category : 'definition' }

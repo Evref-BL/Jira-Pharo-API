@@ -28,6 +28,9 @@
 | `key` | `String` | nil | |
 | `labels` | `Object` | nil | |
 | `summary` | `String` | nil | |
+| `timeEstimate` | `Object` | nil | |
+| `timeOriginalEstimate` | `Object` | nil | |
+| `timespent` | `Object` | nil | |
 | `timespent` | `Object` | nil | |
 
 "
@@ -41,6 +44,8 @@ Class {
 		'#id => FMProperty',
 		'#created => FMProperty',
 		'#timespent => FMProperty',
+		'#timeEstimate => FMProperty',
+		'#timeOriginalEstimate => FMProperty',
 		'#labels => FMProperty',
 		'#components => FMMany type: #JPComponent opposite: #issue',
 		'#worklogs => FMMany type: #JPWorklog opposite: #issue',
@@ -242,6 +247,34 @@ JPIssue >> summary [
 JPIssue >> summary: anObject [
 	<generated>
 	summary := anObject
+]
+
+{ #category : 'accessing' }
+JPIssue >> timeEstimate [
+
+	<FMProperty: #timeEstimate type: #Object>
+	<generated>
+	^ timeEstimate
+]
+
+{ #category : 'accessing' }
+JPIssue >> timeEstimate: anObject [
+	<generated>
+	timeEstimate := anObject
+]
+
+{ #category : 'accessing' }
+JPIssue >> timeOriginalEstimate [
+
+	<FMProperty: #timeOriginalEstimate type: #Object>
+	<generated>
+	^ timeOriginalEstimate
+]
+
+{ #category : 'accessing' }
+JPIssue >> timeOriginalEstimate: anObject [
+	<generated>
+	timeOriginalEstimate := anObject
 ]
 
 { #category : 'accessing' }

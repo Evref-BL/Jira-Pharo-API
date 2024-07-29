@@ -161,6 +161,14 @@ JiraPharoAPI >> configureReaderForJiraIssue: reader [
 							 cmp at: #name ifPresent: [ :t | localComponent name: t ].
 
 							 localComponent ]) ].
+				value at: #timeestimate ifPresent: [ :timeestimate |
+					timeestimate ifNotNil: [
+						pharoIssue timeEstimate: timeestimate seconds ] ].
+				value
+					at: #timeoriginalestimate
+					ifPresent: [ :timeoriginalestimate |
+						timeoriginalestimate ifNotNil: [
+							pharoIssue timeOriginalEstimate: timeoriginalestimate seconds ] ].
 				value
 					at: #project
 					ifPresent: [ :project |
