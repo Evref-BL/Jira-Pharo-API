@@ -23,9 +23,9 @@ Class {
 	#superclass : 'JPEntity',
 	#instVars : [
 		'#id => FMProperty',
-		'#issues => FMMany type: #JPIssue opposite: #project',
+		'#name => FMProperty',
 		'#key => FMProperty',
-		'#name => FMProperty'
+		'#issues => FMMany type: #JPIssue opposite: #project'
 	],
 	#category : 'JiraPharoAPI-Model-Entities',
 	#package : 'JiraPharoAPI-Model',

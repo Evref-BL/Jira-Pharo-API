@@ -162,6 +162,10 @@ JiraPharoAPI >> configureReaderForJiraIssue: reader [
 
 							 localComponent ]) ].
 				value
+					at: #project
+					ifPresent: [ :project |
+					pharoIssue project: (JPProject fromDictionary: project) ].
+				value
 					at: #creator
 					ifPresent: [ :author |
 					pharoIssue creator: (JPUser fromDictionary: author) ].
