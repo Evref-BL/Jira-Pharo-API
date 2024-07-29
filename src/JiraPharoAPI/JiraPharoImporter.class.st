@@ -96,18 +96,9 @@ JiraPharoImporter >> loadAssigneeForIssuesToLoad: issuesToLoad [
 { #category : 'api - import' }
 JiraPharoImporter >> loadCreatorForIssuesToLoad: issuesToLoad [
 
-	| creatorsToLoad |
-	creatorsToLoad := issuesToLoad iterator
-	                  | [ :issue | issue creator ] collectIt
-	                  | [ :creator | creator isNil ] rejectIt
-	                  |
-	                  [ :creator | self model includes: creator ]
-		                  rejectIt > Set.
-	creatorsToLoad do: [ :creator |
-		(self model allWithType: JPIssue)
-			select: [ :issue | issue creator = creator ]
-			thenDo: [ :issue | issue creator: creator ] ].
-	self model addAll: creatorsToLoad
+	issuesToLoad
+		reject: [ :issue | issue creator isNil ]
+		thenDo: [ :issue | issue creator: (self ensureUser: issue creator) ]
 ]
 
 { #category : 'api - import' }

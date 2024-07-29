@@ -12,7 +12,7 @@ Class {
 	#package : 'JiraPharoAPI-Tests'
 }
 
-{ #category : 'test' }
+{ #category : 'running' }
 JiraPharoImporterTest >> setUp [
 
 	super setUp.
@@ -22,7 +22,7 @@ JiraPharoImporterTest >> setUp [
 		              yourself
 ]
 
-{ #category : 'test' }
+{ #category : 'tests' }
 JiraPharoImporterTest >> testEnsureProject [
 
 	| user createdUser |
@@ -33,7 +33,7 @@ JiraPharoImporterTest >> testEnsureProject [
 	self assert: createdUser identicalTo: user
 ]
 
-{ #category : 'test' }
+{ #category : 'tests' }
 JiraPharoImporterTest >> testEnsureProjectAlreadyExisting [
 
 	| project createdProject projectB |
@@ -49,7 +49,7 @@ JiraPharoImporterTest >> testEnsureProjectAlreadyExisting [
 	self deny: createdProject identicalTo: projectB
 ]
 
-{ #category : 'test' }
+{ #category : 'tests' }
 JiraPharoImporterTest >> testEnsureUser [
 
 	| user createdUser |
@@ -60,7 +60,7 @@ JiraPharoImporterTest >> testEnsureUser [
 	self assert: createdUser identicalTo: user
 ]
 
-{ #category : 'test' }
+{ #category : 'tests' }
 JiraPharoImporterTest >> testEnsureUserAlreadyExisting [
 
 	| user createdUser userB |
@@ -76,7 +76,7 @@ JiraPharoImporterTest >> testEnsureUserAlreadyExisting [
 	self deny: createdUser identicalTo: userB
 ]
 
-{ #category : 'test' }
+{ #category : 'tests' }
 JiraPharoImporterTest >> testLoadAssigneeForIssuesToLoad [
 
 	| issue assignee |
@@ -95,7 +95,7 @@ JiraPharoImporterTest >> testLoadAssigneeForIssuesToLoad [
 	self assert: issue assignee equals: assignee
 ]
 
-{ #category : 'test' }
+{ #category : 'tests' }
 JiraPharoImporterTest >> testLoadCreatorForIssuesToLoad [
 
 	| issue creator |
@@ -114,7 +114,7 @@ JiraPharoImporterTest >> testLoadCreatorForIssuesToLoad [
 	self assert: issue creator equals: creator
 ]
 
-{ #category : 'test' }
+{ #category : 'tests' }
 JiraPharoImporterTest >> testLoadIssueWithSameUserAssignedAndCreator [
 
 	| issue assignee creator user |
@@ -139,7 +139,7 @@ JiraPharoImporterTest >> testLoadIssueWithSameUserAssignedAndCreator [
 	self assert: issue assignee equals: user
 ]
 
-{ #category : 'test' }
+{ #category : 'tests' }
 JiraPharoImporterTest >> testLoadIssues [
 
 	self assert: model size equals: 0.
@@ -264,7 +264,7 @@ JiraPharoImporterTest >> testLoadProjectForIssuesToLoad [
 	self assert: issue project equals: project
 ]
 
-{ #category : 'test' }
+{ #category : 'tests' }
 JiraPharoImporterTest >> testLoadSameIssueTwoTimes [
 
 	jpImporter loadIssues: { (JPIssue new
@@ -277,7 +277,7 @@ JiraPharoImporterTest >> testLoadSameIssueTwoTimes [
 	self assert: model size equals: 1
 ]
 
-{ #category : 'test' }
+{ #category : 'tests' }
 JiraPharoImporterTest >> testLoadTwoIssuesWithSameAssigneeComplete [
 
 	| issue issueB assignee assigneeB |
@@ -312,7 +312,7 @@ JiraPharoImporterTest >> testLoadTwoIssuesWithSameAssigneeComplete [
 	self assert: issue assignee identicalTo: issueB assignee
 ]
 
-{ #category : 'test' }
+{ #category : 'tests' }
 JiraPharoImporterTest >> testLoadTwoIssuesWithSameAuthor [
 
 	| issue creator issueB |
@@ -336,7 +336,7 @@ JiraPharoImporterTest >> testLoadTwoIssuesWithSameAuthor [
 	self assert: issue creator equals: creator
 ]
 
-{ #category : 'test' }
+{ #category : 'tests' }
 JiraPharoImporterTest >> testLoadTwoIssuesWithSameAuthorComplete [
 
 	| issue creator issueB creatorB |
@@ -369,6 +369,57 @@ JiraPharoImporterTest >> testLoadTwoIssuesWithSameAuthorComplete [
 		equals: 2.
 	self assert: (model allWithType: JPIssue) size equals: 2.
 	self assert: issue creator identicalTo: issueB creator
+]
+
+{ #category : 'tests' }
+JiraPharoImporterTest >> testLoadUserAsAssigneeThenCreatorOfOtherIssue [
+
+	| issue creator issueB assigneeB |
+	issue := JPIssue new
+		         id: 1;
+		         description: 'Issue 1';
+		         yourself.
+	creator := JPUser new
+		           accountId: 12;
+		           yourself.
+	issue creator: creator.
+	jpImporter loadIssues: { issue }.
+	issueB := JPIssue new
+		          id: 2;
+		          description: 'Issue 1';
+		          yourself.
+	assigneeB := JPUser new
+		             accountId: 12;
+		             yourself.
+	issueB assignee: assigneeB.
+	jpImporter loadIssues: { issueB }.
+	self assert: model size equals: 3
+]
+
+{ #category : 'tests' }
+JiraPharoImporterTest >> testLoadUserAsCreatorThenAssigneeOfOtherIssue [
+
+	| issue creator issueB assigneeB |
+	issueB := JPIssue new
+		          id: 2;
+		          description: 'Issue 1';
+		          yourself.
+	assigneeB := JPUser new
+		             accountId: 12;
+		             yourself.
+	issueB assignee: assigneeB.
+	jpImporter loadIssues: { issueB }.
+	issue := JPIssue new
+		         id: 1;
+		         description: 'Issue 1';
+		         yourself.
+	creator := JPUser new
+		           accountId: 12;
+		           yourself.
+	issue creator: creator.
+	jpImporter loadIssues: { issue }.
+
+	self assert: model size equals: 3
 ]
 
 { #category : 'tests' }
