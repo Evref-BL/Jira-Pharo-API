@@ -1,7 +1,7 @@
-Extension { #name : #JPUser }
+Extension { #name : 'JPEntity' }
 
-{ #category : #'*JiraPharoAPI' }
-JPUser class >> fromDictionary: aUserInDictionary [
+{ #category : '*JiraPharoAPI' }
+JPEntity class >> fromDictionary: aUserInDictionary [
 
 	| user |
 	user := self new.
