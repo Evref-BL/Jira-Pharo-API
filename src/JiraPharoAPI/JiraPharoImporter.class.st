@@ -63,29 +63,30 @@ JiraPharoImporter >> ensureUser: aPotentialUser [
 { #category : #extraction }
 JiraPharoImporter >> extractAllIssuesFromQuery: jqlQuery [
 
-	| issues tmp |
+	| issues tmp itemByPage |
+	itemByPage := 100.
 	('Extract all issues from query ' , jqlQuery) recordInfo.
 	issues := OrderedCollection new.
 	('Extract issues from ' , issues size printString , ' to '
-	 , (issues size + 100) printString) recordInfo.
+	 , (issues size + itemByPage) printString) recordInfo.
 	tmp := self api
 		       searchIssueWithExpand: nil
 		       fields: { '*all' }
 		       fieldsByKeys: nil
 		       jql: jqlQuery
-		       maxResults: 100
+		       maxResults: itemByPage
 		       startAt: 0.
 
 	issues addAll: tmp issues.
-	[ tmp issues isNotEmpty ] whileTrue: [
+	[ tmp issues size = itemByPage ] whileTrue: [
 		('Extract issues from ' , issues size printString , ' to '
-		 , (issues size + 100) printString) recordInfo.
+		 , (issues size + itemByPage) printString) recordInfo.
 		tmp := self api
 			       searchIssueWithExpand: nil
 			       fields: { '*all' }
 			       fieldsByKeys: nil
 			       jql: jqlQuery
-			       maxResults: 100
+			       maxResults: itemByPage
 			       startAt: issues size.
 		issues addAll: tmp issues ].
 	^ issues
