@@ -19,7 +19,10 @@ BaselineOfJiraPharoAPI >> defineDependencies: spec [
 
 	spec
 		baseline: 'NeoJSON'
-		with: [ spec repository: 'github://svenvc/NeoJSON/repository' ]
+		with: [ spec repository: 'github://svenvc/NeoJSON/repository' ].
+	spec
+		baseline: 'MoreLogger'
+		with: [ spec repository: 'github://badetitou/MoreLogger:main/src' ]
 ]
 
 { #category : #baselines }
@@ -31,7 +34,7 @@ BaselineOfJiraPharoAPI >> definePackages: spec [
 
 	spec
 		package: 'JiraPharoAPI'
-		with: [ spec requires: #( 'JiraPharoAPI-Model' 'NeoJSON' ) ].
+		with: [ spec requires: #( 'JiraPharoAPI-Model' 'NeoJSON' 'MoreLogger' ) ].
 	spec package: 'JiraPharoAPI-Model'.
 	spec
 		package: 'JiraPharoAPI-Model-Extended'

@@ -4,29 +4,28 @@ For each request, I fullfill the Extract-Transform-Load pattern.
 By analysing current model, I try to not perform extract if possible (for instance if a concept already exists).
 "
 Class {
-	#name : 'JiraPharoImporter',
-	#superclass : 'Object',
+	#name : #JiraPharoImporter,
+	#superclass : #Object,
 	#instVars : [
 		'model',
 		'api'
 	],
-	#category : 'JiraPharoAPI',
-	#package : 'JiraPharoAPI'
+	#category : #JiraPharoAPI
 }
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 JiraPharoImporter >> api [
 
 	^ api
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 JiraPharoImporter >> api: anObject [
 
 	api := anObject
 ]
 
-{ #category : 'api - import' }
+{ #category : #'api - import' }
 JiraPharoImporter >> ensureIssueType: aPotentialIssueType [
 	"Search is user is already in model"
 
@@ -36,7 +35,7 @@ JiraPharoImporter >> ensureIssueType: aPotentialIssueType [
 	^ self model add: aPotentialIssueType
 ]
 
-{ #category : 'api - import' }
+{ #category : #'api - import' }
 JiraPharoImporter >> ensureProject: aPotentialProject [
 	"Search is user is already in model"
 
@@ -46,7 +45,7 @@ JiraPharoImporter >> ensureProject: aPotentialProject [
 	^ self model add: aPotentialProject
 ]
 
-{ #category : 'api - import' }
+{ #category : #'api - import' }
 JiraPharoImporter >> ensureUser: aPotentialUser [
 	"Search is user is already in model"
 
@@ -56,10 +55,11 @@ JiraPharoImporter >> ensureUser: aPotentialUser [
 	^ self model add: aPotentialUser
 ]
 
-{ #category : 'api - import' }
+{ #category : #'api - import' }
 JiraPharoImporter >> extractAllIssuesOf: aUsername [
 
 	| issues jqlQuery tmp |
+	('Extract all issues of ' , aUsername) recordDebug.
 	jqlQuery := String streamContents: [ :stream |
 		            stream << 'assignee = "'.
 		            stream << aUsername.
@@ -74,6 +74,7 @@ JiraPharoImporter >> extractAllIssuesOf: aUsername [
 		       startAt: 0.
 
 	issues addAll: tmp issues.
+	('Size ' , tmp issues size printString) recordInfo.
 	[ tmp issues isNotEmpty ] whileTrue: [
 		tmp := self api
 			       searchIssueWithExpand: nil
@@ -86,7 +87,7 @@ JiraPharoImporter >> extractAllIssuesOf: aUsername [
 	^ issues
 ]
 
-{ #category : 'api - import' }
+{ #category : #'api - import' }
 JiraPharoImporter >> importAllIssuesOf: aUsername [
 
 	| issues |
@@ -94,7 +95,7 @@ JiraPharoImporter >> importAllIssuesOf: aUsername [
 	self loadIssues: issues.
 ]
 
-{ #category : 'api - import' }
+{ #category : #'api - import' }
 JiraPharoImporter >> loadAssigneeForIssuesToLoad: issuesToLoad [
 
 	issuesToLoad
@@ -103,7 +104,7 @@ JiraPharoImporter >> loadAssigneeForIssuesToLoad: issuesToLoad [
 		issue assignee: (self ensureUser: issue assignee) ]
 ]
 
-{ #category : 'api - import' }
+{ #category : #'api - import' }
 JiraPharoImporter >> loadCreatorForIssuesToLoad: issuesToLoad [
 
 	issuesToLoad
@@ -111,7 +112,7 @@ JiraPharoImporter >> loadCreatorForIssuesToLoad: issuesToLoad [
 		thenDo: [ :issue | issue creator: (self ensureUser: issue creator) ]
 ]
 
-{ #category : 'api - import' }
+{ #category : #'api - import' }
 JiraPharoImporter >> loadIssues: issues [
 
 	| issuesToLoad |
@@ -126,7 +127,7 @@ JiraPharoImporter >> loadIssues: issues [
 	self loadProjectForIssuesToLoad: issuesToLoad
 ]
 
-{ #category : 'api - import' }
+{ #category : #'api - import' }
 JiraPharoImporter >> loadProjectForIssuesToLoad: issuesToLoad [
 
 	issuesToLoad
@@ -135,7 +136,7 @@ JiraPharoImporter >> loadProjectForIssuesToLoad: issuesToLoad [
 		issue project: (self ensureProject: issue project) ]
 ]
 
-{ #category : 'api - import' }
+{ #category : #'api - import' }
 JiraPharoImporter >> loadTypeForIssuesToLoad: issuesToLoad [
 
 	issuesToLoad
@@ -143,7 +144,7 @@ JiraPharoImporter >> loadTypeForIssuesToLoad: issuesToLoad [
 		thenDo: [ :issue | issue type: (self ensureIssueType: issue type) ]
 ]
 
-{ #category : 'api - import' }
+{ #category : #'api - import' }
 JiraPharoImporter >> loadWorklogsForIssuesToLoad: issuesToLoad [
 
 	| worklogsToLoad |
@@ -161,13 +162,13 @@ JiraPharoImporter >> loadWorklogsForIssuesToLoad: issuesToLoad [
 	self model addAll: worklogsToLoad
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 JiraPharoImporter >> model [
 
 	^ model
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 JiraPharoImporter >> model: anObject [
 
 	model := anObject
