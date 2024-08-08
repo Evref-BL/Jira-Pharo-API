@@ -184,7 +184,11 @@ JiraPharoAPI >> configureReaderForJiraIssue: reader [
 { #category : #'api - issue search' }
 JiraPharoAPI >> configureReaderForJiraUser: reader [
 
-	reader for: JPUser do: [ :mapping | mapping mapAllInstVars ]
+	reader for: JPUser do: [ :mapping | mapping mapAllInstVars ].
+	reader
+		for: #ArrayOfJPUser
+		customDo: [ :customMapping |
+		customMapping listOfElementSchema: JPUser ]
 ]
 
 { #category : #'api - issue search' }
@@ -211,6 +215,33 @@ JiraPharoAPI >> endpoint [
 JiraPharoAPI >> endpoint: anObject [
 
 	endpoint := anObject
+]
+
+{ #category : #'api - user' }
+JiraPharoAPI >> findUserUsingQuery: aQuery [
+	"https://developer.atlassian.com/cloud/jira/platform/rest/v2/api-group-users/#api-rest-api-2-user-get"
+
+	^ self findUserUsingQuery: aQuery maxResults: nil startAt: nil
+]
+
+{ #category : #'api - user' }
+JiraPharoAPI >> findUserUsingQuery: aQuery maxResults: maxResults startAt: startAt [
+	"https://developer.atlassian.com/cloud/jira/platform/rest/v2/api-group-users/#api-rest-api-2-user-get"
+
+	self prepareZnClient.
+	znClient path: self basePath , '/user/search'.
+	znClient queryAt: 'query' put: aQuery.
+
+
+	maxResults ifNotNil: [ :e | znClient queryAt: #maxResults put: e ].
+	startAt ifNotNil: [ :e | znClient queryAt: #startAt put: e ].
+
+	self rawData ifFalse: [
+		znClient contentReader: [ :entity |
+			generalReader
+				on: entity contents readStream;
+				nextAs: #ArrayOfJPUser ] ].
+	^ znClient get
 ]
 
 { #category : #accessing }
