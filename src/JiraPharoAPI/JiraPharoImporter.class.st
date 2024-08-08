@@ -7,6 +7,7 @@ I have few api endpoints.
 
 - `JiraPharoImporter>>#importAllIssuesOf:` to import issues **assigned** to one person
 - `JiraPharoImporter>>#importUserFromAccountID:` to import on `JPUser`
+- `JiraPharoImporter>>#importAllCurrentAndPastIssuesOf:` to import issues **assigned** to one person, or that has been assigned to this person
 "
 Class {
 	#name : #JiraPharoImporter,
@@ -96,6 +97,18 @@ JiraPharoImporter >> extractAllIssuesFromQuery: jqlQuery [
 JiraPharoImporter >> extractUserFromAccountID: accountId [
 
 	^ self api getUser: accountId
+]
+
+{ #category : #'api - import' }
+JiraPharoImporter >> importAllCurrentAndPastIssuesOf: anEmail [
+
+	| user modelUser issues |
+	user := self api findUserUsingQuery: anEmail.
+	modelUser := self importUserFromAccountID: user first accountId.
+	issues := self importAllIssuesFromQuery:
+		          'assignee was ' , modelUser accountId.
+	issues do: [ :iss | iss addHistoricallyAssigned: modelUser ].
+	^ issues
 ]
 
 { #category : #'api - import' }
