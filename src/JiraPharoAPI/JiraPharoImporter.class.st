@@ -90,6 +90,12 @@ JiraPharoImporter >> extractAllIssuesFromQuery: jqlQuery [
 	^ issues
 ]
 
+{ #category : #extraction }
+JiraPharoImporter >> extractUserFromAccountID: accountId [
+
+	^ self api getUser: accountId
+]
+
 { #category : #'api - import' }
 JiraPharoImporter >> importAllIssuesFromQuery: aQuery [
 
@@ -108,6 +114,14 @@ JiraPharoImporter >> importAllIssuesOf: aUsername [
 		            stream << aUsername.
 		            stream << '"' ].
 	^ self importAllIssuesFromQuery: jqlQuery
+]
+
+{ #category : #'api - import' }
+JiraPharoImporter >> importUserFromAccountID: anAccountID [
+
+	| potentialUser |
+	potentialUser := self extractUserFromAccountID: anAccountID.
+	^ self ensureUser: potentialUser
 ]
 
 { #category : #load }
