@@ -18,19 +18,17 @@
 
 "
 Class {
-	#name : 'JPComponent',
-	#superclass : 'JPEntity',
+	#name : #JPComponent,
+	#superclass : #JPEntity,
 	#instVars : [
 		'#id => FMProperty',
 		'#name => FMProperty',
 		'#issue => FMOne type: #JPIssue opposite: #components'
 	],
-	#category : 'JiraPharoAPI-Model-Entities',
-	#package : 'JiraPharoAPI-Model',
-	#tag : 'Entities'
+	#category : 'JiraPharoAPI-Model-Entities'
 }
 
-{ #category : 'meta' }
+{ #category : #meta }
 JPComponent class >> annotation [
 
 	<FMClass: #Component super: #JPEntity>
@@ -39,7 +37,7 @@ JPComponent class >> annotation [
 	^ self
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 JPComponent >> id [
 
 	<FMProperty: #id type: #Number>
@@ -47,13 +45,13 @@ JPComponent >> id [
 	^ id
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 JPComponent >> id: anObject [
 	<generated>
 	id := anObject
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 JPComponent >> issue [
 	"Relation named: #issue type: #JPIssue opposite: #components"
 
@@ -61,14 +59,14 @@ JPComponent >> issue [
 	^ issue
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 JPComponent >> issue: anObject [
 
 	<generated>
 	issue := anObject
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 JPComponent >> name [
 
 	<FMProperty: #name type: #String>
@@ -76,7 +74,7 @@ JPComponent >> name [
 	^ name
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 JPComponent >> name: anObject [
 	<generated>
 	name := anObject

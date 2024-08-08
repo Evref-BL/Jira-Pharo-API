@@ -1,12 +1,10 @@
 Class {
-	#name : 'JPEntity',
-	#superclass : 'MooseEntity',
-	#category : 'JiraPharoAPI-Model-Entities',
-	#package : 'JiraPharoAPI-Model',
-	#tag : 'Entities'
+	#name : #JPEntity,
+	#superclass : #MooseEntity,
+	#category : 'JiraPharoAPI-Model-Entities'
 }
 
-{ #category : 'meta' }
+{ #category : #meta }
 JPEntity class >> annotation [
 
 	<FMClass: #Entity super: #MooseEntity>
@@ -16,14 +14,14 @@ JPEntity class >> annotation [
 	^ self
 ]
 
-{ #category : 'testing' }
+{ #category : #testing }
 JPEntity class >> isAbstract [
 
 	<generated>
 	^ self == JPEntity
 ]
 
-{ #category : 'meta' }
+{ #category : #meta }
 JPEntity class >> metamodel [
 
 	<generated>

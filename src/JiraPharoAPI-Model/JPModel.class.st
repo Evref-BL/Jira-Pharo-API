@@ -1,14 +1,12 @@
 Class {
-	#name : 'JPModel',
-	#superclass : 'MooseModel',
+	#name : #JPModel,
+	#superclass : #MooseModel,
 	#traits : 'JPTEntityCreator',
 	#classTraits : 'JPTEntityCreator classTrait',
-	#category : 'JiraPharoAPI-Model-Model',
-	#package : 'JiraPharoAPI-Model',
-	#tag : 'Model'
+	#category : 'JiraPharoAPI-Model-Model'
 }
 
-{ #category : 'meta' }
+{ #category : #meta }
 JPModel class >> annotation [
 	<FMClass: #JPModel super: #MooseModel>
 	<package: #'JiraPharoAPI-Model'>

@@ -1,1 +1,1 @@
-Package { #name : 'JiraPharoAPI-Tests' }
+Package { #name : #'JiraPharoAPI-Tests' }

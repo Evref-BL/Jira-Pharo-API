@@ -22,8 +22,8 @@
 
 "
 Class {
-	#name : 'JPIssueType',
-	#superclass : 'JPEntity',
+	#name : #JPIssueType,
+	#superclass : #JPEntity,
 	#instVars : [
 		'#id => FMProperty',
 		'#description => FMProperty',
@@ -33,12 +33,10 @@ Class {
 		'#avatarId => FMProperty',
 		'#issues => FMMany type: #JPIssue opposite: #type'
 	],
-	#category : 'JiraPharoAPI-Model-Entities',
-	#package : 'JiraPharoAPI-Model',
-	#tag : 'Entities'
+	#category : 'JiraPharoAPI-Model-Entities'
 }
 
-{ #category : 'meta' }
+{ #category : #meta }
 JPIssueType class >> annotation [
 
 	<FMClass: #IssueType super: #JPEntity>
@@ -47,20 +45,20 @@ JPIssueType class >> annotation [
 	^ self
 ]
 
-{ #category : 'comparing' }
+{ #category : #comparing }
 JPIssueType >> = aJPIssueType [
 
 	<generated>
 	^ aJPIssueType id = self id
 ]
 
-{ #category : 'adding' }
+{ #category : #adding }
 JPIssueType >> addIssue: anObject [
 	<generated>
 	^ self issues add: anObject
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 JPIssueType >> avatarId [
 
 	<FMProperty: #avatarId type: #String>
@@ -68,13 +66,13 @@ JPIssueType >> avatarId [
 	^ avatarId
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 JPIssueType >> avatarId: anObject [
 	<generated>
 	avatarId := anObject
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 JPIssueType >> description [
 
 	<FMProperty: #description type: #String>
@@ -82,20 +80,20 @@ JPIssueType >> description [
 	^ description
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 JPIssueType >> description: anObject [
 	<generated>
 	description := anObject
 ]
 
-{ #category : 'comparing' }
+{ #category : #comparing }
 JPIssueType >> hash [
 
 	<generated>
 	^ self id hash 
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 JPIssueType >> iconUrl [
 
 	<FMProperty: #iconUrl type: #String>
@@ -103,13 +101,13 @@ JPIssueType >> iconUrl [
 	^ iconUrl
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 JPIssueType >> iconUrl: anObject [
 	<generated>
 	iconUrl := anObject
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 JPIssueType >> id [
 
 	<FMProperty: #id type: #Number>
@@ -117,13 +115,13 @@ JPIssueType >> id [
 	^ id
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 JPIssueType >> id: anObject [
 	<generated>
 	id := anObject
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 JPIssueType >> issues [
 	"Relation named: #issues type: #JPIssue opposite: #type"
 
@@ -132,14 +130,14 @@ JPIssueType >> issues [
 	^ issues
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 JPIssueType >> issues: anObject [
 
 	<generated>
 	issues value: anObject
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 JPIssueType >> name [
 
 	<FMProperty: #name type: #String>
@@ -147,13 +145,13 @@ JPIssueType >> name [
 	^ name
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 JPIssueType >> name: anObject [
 	<generated>
 	name := anObject
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 JPIssueType >> subtask [
 
 	<FMProperty: #subtask type: #String>
@@ -161,7 +159,7 @@ JPIssueType >> subtask [
 	^ subtask
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 JPIssueType >> subtask: anObject [
 	<generated>
 	subtask := anObject

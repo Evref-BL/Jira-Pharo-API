@@ -2,6 +2,10 @@
 I am an importer that helps people constructing correctly models.
 For each request, I fullfill the Extract-Transform-Load pattern.
 By analysing current model, I try to not perform extract if possible (for instance if a concept already exists).
+
+I have few api endpoints.
+
+- `JiraPharoImporter>>#importAllIssuesOf:` to import issues **assigned** to one person
 "
 Class {
 	#name : #JiraPharoImporter,
@@ -25,7 +29,7 @@ JiraPharoImporter >> api: anObject [
 	api := anObject
 ]
 
-{ #category : #'api - import' }
+{ #category : #load }
 JiraPharoImporter >> ensureIssueType: aPotentialIssueType [
 	"Search is user is already in model"
 
@@ -35,7 +39,7 @@ JiraPharoImporter >> ensureIssueType: aPotentialIssueType [
 	^ self model add: aPotentialIssueType
 ]
 
-{ #category : #'api - import' }
+{ #category : #load }
 JiraPharoImporter >> ensureProject: aPotentialProject [
 	"Search is user is already in model"
 
@@ -45,7 +49,7 @@ JiraPharoImporter >> ensureProject: aPotentialProject [
 	^ self model add: aPotentialProject
 ]
 
-{ #category : #'api - import' }
+{ #category : #load }
 JiraPharoImporter >> ensureUser: aPotentialUser [
 	"Search is user is already in model"
 
@@ -55,15 +59,11 @@ JiraPharoImporter >> ensureUser: aPotentialUser [
 	^ self model add: aPotentialUser
 ]
 
-{ #category : #'api - import' }
-JiraPharoImporter >> extractAllIssuesOf: aUsername [
+{ #category : #extraction }
+JiraPharoImporter >> extractAllIssuesFromQuery: jqlQuery [
 
-	| issues jqlQuery tmp |
-	('Extract all issues of ' , aUsername) recordDebug.
-	jqlQuery := String streamContents: [ :stream |
-		            stream << 'assignee = "'.
-		            stream << aUsername.
-		            stream << '"' ].
+	| issues tmp |
+	('Extract all issues from query ' , jqlQuery) recordDebug.
 	issues := OrderedCollection new.
 	tmp := self api
 		       searchIssueWithExpand: nil
@@ -74,7 +74,6 @@ JiraPharoImporter >> extractAllIssuesOf: aUsername [
 		       startAt: 0.
 
 	issues addAll: tmp issues.
-	('Size ' , tmp issues size printString) recordInfo.
 	[ tmp issues isNotEmpty ] whileTrue: [
 		tmp := self api
 			       searchIssueWithExpand: nil
@@ -88,14 +87,26 @@ JiraPharoImporter >> extractAllIssuesOf: aUsername [
 ]
 
 { #category : #'api - import' }
-JiraPharoImporter >> importAllIssuesOf: aUsername [
+JiraPharoImporter >> importAllIssuesFromQuery: aQuery [
 
 	| issues |
-	issues := self extractAllIssuesOf: aUsername.
-	self loadIssues: issues.
+	issues := self extractAllIssuesFromQuery: aQuery.
+	^ self loadIssues: issues.
 ]
 
 { #category : #'api - import' }
+JiraPharoImporter >> importAllIssuesOf: aUsername [
+
+	| jqlQuery |
+	('Extract all issues of ' , aUsername) recordDebug.
+	jqlQuery := String streamContents: [ :stream |
+		            stream << 'assignee = "'.
+		            stream << aUsername.
+		            stream << '"' ].
+	^ self importAllIssuesFromQuery: jqlQuery
+]
+
+{ #category : #load }
 JiraPharoImporter >> loadAssigneeForIssuesToLoad: issuesToLoad [
 
 	issuesToLoad
@@ -104,7 +115,7 @@ JiraPharoImporter >> loadAssigneeForIssuesToLoad: issuesToLoad [
 		issue assignee: (self ensureUser: issue assignee) ]
 ]
 
-{ #category : #'api - import' }
+{ #category : #load }
 JiraPharoImporter >> loadCreatorForIssuesToLoad: issuesToLoad [
 
 	issuesToLoad
@@ -112,22 +123,29 @@ JiraPharoImporter >> loadCreatorForIssuesToLoad: issuesToLoad [
 		thenDo: [ :issue | issue creator: (self ensureUser: issue creator) ]
 ]
 
-{ #category : #'api - import' }
+{ #category : #load }
 JiraPharoImporter >> loadIssues: issues [
 
-	| issuesToLoad |
-	issuesToLoad := issues reject: [ :issueProposedForImmport |
-		                (self model allWithType: JPIssue) anySatisfy: [
-			                :issue | issue id = issueProposedForImmport id ] ].
+	| issuesToLoad issuesToReturn |
+	issuesToReturn := OrderedCollection new.
+	issuesToLoad := OrderedCollection new.
+	issues do: [ :issueProposedForImmport |
+		(self model allWithType: JPIssue)
+			detect: [ :issue | issue id = issueProposedForImmport id ]
+			ifFound: [ :one | issuesToReturn add: one ]
+			ifNone: [
+				issuesToReturn add: issueProposedForImmport.
+				issuesToLoad add: issueProposedForImmport ] ].
 	self model addAll: issuesToLoad.
 	self loadTypeForIssuesToLoad: issuesToLoad.
 	self loadWorklogsForIssuesToLoad: issuesToLoad.
 	self loadCreatorForIssuesToLoad: issuesToLoad.
 	self loadAssigneeForIssuesToLoad: issuesToLoad.
-	self loadProjectForIssuesToLoad: issuesToLoad
+	self loadProjectForIssuesToLoad: issuesToLoad.
+	^ issuesToReturn
 ]
 
-{ #category : #'api - import' }
+{ #category : #load }
 JiraPharoImporter >> loadProjectForIssuesToLoad: issuesToLoad [
 
 	issuesToLoad
@@ -136,7 +154,7 @@ JiraPharoImporter >> loadProjectForIssuesToLoad: issuesToLoad [
 		issue project: (self ensureProject: issue project) ]
 ]
 
-{ #category : #'api - import' }
+{ #category : #load }
 JiraPharoImporter >> loadTypeForIssuesToLoad: issuesToLoad [
 
 	issuesToLoad
@@ -144,7 +162,7 @@ JiraPharoImporter >> loadTypeForIssuesToLoad: issuesToLoad [
 		thenDo: [ :issue | issue type: (self ensureIssueType: issue type) ]
 ]
 
-{ #category : #'api - import' }
+{ #category : #load }
 JiraPharoImporter >> loadWorklogsForIssuesToLoad: issuesToLoad [
 
 	| worklogsToLoad |

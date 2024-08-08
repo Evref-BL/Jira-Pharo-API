@@ -19,20 +19,18 @@
 
 "
 Class {
-	#name : 'JPProject',
-	#superclass : 'JPEntity',
+	#name : #JPProject,
+	#superclass : #JPEntity,
 	#instVars : [
 		'#id => FMProperty',
 		'#name => FMProperty',
 		'#key => FMProperty',
 		'#issues => FMMany type: #JPIssue opposite: #project'
 	],
-	#category : 'JiraPharoAPI-Model-Entities',
-	#package : 'JiraPharoAPI-Model',
-	#tag : 'Entities'
+	#category : 'JiraPharoAPI-Model-Entities'
 }
 
-{ #category : 'meta' }
+{ #category : #meta }
 JPProject class >> annotation [
 
 	<FMClass: #Project super: #JPEntity>
@@ -41,27 +39,27 @@ JPProject class >> annotation [
 	^ self
 ]
 
-{ #category : 'comparing' }
+{ #category : #comparing }
 JPProject >> = aJPProject [
 
 	<generated>
 	^ aJPProject id = self id
 ]
 
-{ #category : 'adding' }
+{ #category : #adding }
 JPProject >> addIssue: anObject [
 	<generated>
 	^ self issues add: anObject
 ]
 
-{ #category : 'comparing' }
+{ #category : #comparing }
 JPProject >> hash [
 
 	<generated>
 	^ self id hash 
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 JPProject >> id [
 
 	<FMProperty: #id type: #Number>
@@ -69,13 +67,13 @@ JPProject >> id [
 	^ id
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 JPProject >> id: anObject [
 	<generated>
 	id := anObject
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 JPProject >> issues [
 	"Relation named: #issues type: #JPIssue opposite: #project"
 
@@ -84,21 +82,21 @@ JPProject >> issues [
 	^ issues
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 JPProject >> issues: anObject [
 
 	<generated>
 	issues value: anObject
 ]
 
-{ #category : 'navigation' }
+{ #category : #navigation }
 JPProject >> issuesGroup [
 	<generated>
 	<navigation: 'Issues'>
 	^ MooseSpecializedGroup withAll: self issues asSet
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 JPProject >> key [
 
 	<FMProperty: #key type: #String>
@@ -106,13 +104,13 @@ JPProject >> key [
 	^ key
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 JPProject >> key: anObject [
 	<generated>
 	key := anObject
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 JPProject >> name [
 
 	<FMProperty: #name type: #String>
@@ -120,7 +118,7 @@ JPProject >> name [
 	^ name
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 JPProject >> name: anObject [
 	<generated>
 	name := anObject
