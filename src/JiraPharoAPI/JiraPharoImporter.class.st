@@ -6,6 +6,7 @@ By analysing current model, I try to not perform extract if possible (for instan
 I have few api endpoints.
 
 - `JiraPharoImporter>>#importAllIssuesOf:` to import issues **assigned** to one person
+- `JiraPharoImporter>>#importUserFromAccountID:` to import on `JPUser`
 "
 Class {
 	#name : #JiraPharoImporter,
