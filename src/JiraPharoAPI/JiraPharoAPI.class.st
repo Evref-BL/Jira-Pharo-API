@@ -16,7 +16,7 @@ Class {
 		'rawData',
 		'generalReader'
 	],
-	#category : 'JiraPharoAPI'
+	#category : #JiraPharoAPI
 }
 
 { #category : #api }
@@ -182,6 +182,12 @@ JiraPharoAPI >> configureReaderForJiraIssue: reader [
 ]
 
 { #category : #'api - issue search' }
+JiraPharoAPI >> configureReaderForJiraUser: reader [
+
+	reader for: JPUser do: [ :mapping | mapping mapAllInstVars ]
+]
+
+{ #category : #'api - issue search' }
 JiraPharoAPI >> configureReaderForJiraWorkload: reader [
 
 	reader for: JPWorklog do: [ :mapping |
@@ -219,6 +225,21 @@ JiraPharoAPI >> generalReader: anObject [
 	generalReader := anObject
 ]
 
+{ #category : #'api - user' }
+JiraPharoAPI >> getUser: accountId [
+	"https://developer.atlassian.com/cloud/jira/platform/rest/v2/api-group-users/#api-rest-api-2-user-get"
+
+	self prepareZnClient.
+	znClient path: self basePath , '/user'.
+	znClient queryAt: 'accountId' put: accountId.
+	self rawData ifFalse: [
+		znClient contentReader: [ :entity |
+			generalReader
+				on: entity contents readStream;
+				nextAs: JPUser ] ].
+	^ znClient get
+]
+
 { #category : #initialization }
 JiraPharoAPI >> initialize [
 
@@ -229,7 +250,8 @@ JiraPharoAPI >> initialize [
 	self rawData: false.
 	generalReader := NeoJSONReader new.
 	self configureReaderForJiraIssue: generalReader.
-	self configureReaderForJiraWorkload: generalReader
+	self configureReaderForJiraWorkload: generalReader.
+	self configureReaderForJiraUser: generalReader
 ]
 
 { #category : #accessing }
