@@ -102,9 +102,10 @@ JiraPharoImporter >> extractUserFromAccountID: accountId [
 { #category : #'api - import' }
 JiraPharoImporter >> importAllCurrentAndPastIssuesOf: anEmail [
 
-	| user modelUser issues |
-	user := self api findUserUsingQuery: anEmail.
-	modelUser := self importUserFromAccountID: user first accountId.
+	| possibleUsers modelUser issues |
+	possibleUsers := self api findUserUsingQuery: anEmail.
+	possibleUsers ifEmpty: [ ^ {  } ].
+	modelUser := self importUserFromAccountID: possibleUsers first accountId.
 	issues := self importAllIssuesFromQuery:
 		          'assignee was ' , modelUser accountId.
 	issues do: [ :iss | iss addHistoricallyAssigned: modelUser ].
