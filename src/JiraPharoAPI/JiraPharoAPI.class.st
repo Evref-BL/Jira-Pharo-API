@@ -16,9 +16,59 @@ Class {
 		'rawData',
 		'generalReader'
 	],
+	#classInstVars : [
+		'apiKey',
+		'user'
+	],
 	#category : 'JiraPharoAPI',
 	#package : 'JiraPharoAPI'
 }
+
+{ #category : 'accessing' }
+JiraPharoAPI class >> apiKey [
+
+	^ apiKey
+]
+
+{ #category : 'accessing' }
+JiraPharoAPI class >> apiKey: anObject [
+
+	apiKey := anObject
+]
+
+{ #category : 'as yet unclassified' }
+JiraPharoAPI class >> llmSettingOn: aBuilder [
+
+	<systemsettings>
+	(aBuilder group: #JiraAPI)
+		parent: #tools;
+		name: 'Jira API';
+		with: [
+			(aBuilder setting: #apiKey)
+				order: -100000;
+				label: 'Jira API Key';
+				target: self;
+				default: '';
+				ghostHelp: 'My key'.
+			(aBuilder setting: #user)
+				order: -100000;
+				label: 'Jira user email';
+				target: self;
+				default: '';
+				ghostHelp: 'benoit.verhaeghe@berger-levrault.com' ]
+]
+
+{ #category : 'accessing' }
+JiraPharoAPI class >> user [
+
+	^ user
+]
+
+{ #category : 'accessing' }
+JiraPharoAPI class >> user: anObject [
+
+	user := anObject
+]
 
 { #category : 'api' }
 JiraPharoAPI >> allProjects [
@@ -281,6 +331,8 @@ JiraPharoAPI >> initialize [
 	self basePath: '/rest/api/latest/'.
 	https := true.
 	self rawData: false.
+	self apiToken: self class apiKey.
+	self user: self class user.
 	generalReader := NeoJSONReader new.
 	self configureReaderForJiraIssue: generalReader.
 	self configureReaderForJiraWorkload: generalReader.
