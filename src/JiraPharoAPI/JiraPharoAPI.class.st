@@ -2,8 +2,8 @@
 I am a class that comes with several utilities to import correctly a Jira model
 "
 Class {
-	#name : #JiraPharoAPI,
-	#superclass : #Object,
+	#name : 'JiraPharoAPI',
+	#superclass : 'Object',
 	#instVars : [
 		'znClient',
 		'port',
@@ -16,10 +16,11 @@ Class {
 		'rawData',
 		'generalReader'
 	],
-	#category : #JiraPharoAPI
+	#category : 'JiraPharoAPI',
+	#package : 'JiraPharoAPI'
 }
 
-{ #category : #api }
+{ #category : 'api' }
 JiraPharoAPI >> allProjects [
 
 	self prepareZnClient.
@@ -40,55 +41,55 @@ JiraPharoAPI >> allProjects [
 	^ znClient get
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JiraPharoAPI >> apiToken [
 
 	^ apiToken
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JiraPharoAPI >> apiToken: anObject [
 
 	apiToken := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JiraPharoAPI >> basePath [
 
 	^ basePath
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JiraPharoAPI >> basePath: anObject [
 
 	basePath := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JiraPharoAPI >> beHttp [
 
 	https := false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JiraPharoAPI >> beHttps [
 
 	https := true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JiraPharoAPI >> bearerToken [
 
 	^ bearerToken
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JiraPharoAPI >> bearerToken: anObject [
 
 	bearerToken := anObject
 ]
 
-{ #category : #'api - issue search' }
+{ #category : 'api - issue search' }
 JiraPharoAPI >> configureReaderForJiraIssue: reader [
 
 	reader
@@ -110,6 +111,7 @@ JiraPharoAPI >> configureReaderForJiraIssue: reader [
 					ifPresent: [ :ti |
 					ti ifNotNil: [ pharoIssue timespent: ti seconds ] ].
 				value at: #summary ifPresent: [ :sum | pharoIssue summary: sum ].
+				value at: #description ifPresent: [ :description | pharoIssue description: description ].
 				value at: #labels ifPresent: [ :labs | pharoIssue labels: labs ].
 
 				value at: #worklog ifPresent: [ :worklog |
@@ -181,7 +183,7 @@ JiraPharoAPI >> configureReaderForJiraIssue: reader [
 						pharoIssue assignee: (JPUser fromDictionary: assignee) ] ] ] ]
 ]
 
-{ #category : #'api - issue search' }
+{ #category : 'api - issue search' }
 JiraPharoAPI >> configureReaderForJiraUser: reader [
 
 	reader for: JPUser do: [ :mapping | mapping mapAllInstVars ].
@@ -191,7 +193,7 @@ JiraPharoAPI >> configureReaderForJiraUser: reader [
 		customMapping listOfElementSchema: JPUser ]
 ]
 
-{ #category : #'api - issue search' }
+{ #category : 'api - issue search' }
 JiraPharoAPI >> configureReaderForJiraWorkload: reader [
 
 	reader for: JPWorklog do: [ :mapping |
@@ -205,26 +207,26 @@ JiraPharoAPI >> configureReaderForJiraWorkload: reader [
 		customMapping listOfElementSchema: JPWorklog ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JiraPharoAPI >> endpoint [
 
 	^ endpoint
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JiraPharoAPI >> endpoint: anObject [
 
 	endpoint := anObject
 ]
 
-{ #category : #'api - user' }
+{ #category : 'api - user' }
 JiraPharoAPI >> findUserUsingQuery: aQuery [
 	"https://developer.atlassian.com/cloud/jira/platform/rest/v2/api-group-users/#api-rest-api-2-user-get"
 
 	^ self findUserUsingQuery: aQuery maxResults: nil startAt: nil
 ]
 
-{ #category : #'api - user' }
+{ #category : 'api - user' }
 JiraPharoAPI >> findUserUsingQuery: aQuery maxResults: maxResults startAt: startAt [
 	"https://developer.atlassian.com/cloud/jira/platform/rest/v2/api-group-users/#api-rest-api-2-user-get"
 
@@ -244,19 +246,19 @@ JiraPharoAPI >> findUserUsingQuery: aQuery maxResults: maxResults startAt: start
 	^ znClient get
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JiraPharoAPI >> generalReader [
 
 	^ generalReader
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JiraPharoAPI >> generalReader: anObject [
 
 	generalReader := anObject
 ]
 
-{ #category : #'api - user' }
+{ #category : 'api - user' }
 JiraPharoAPI >> getUser: accountId [
 	"https://developer.atlassian.com/cloud/jira/platform/rest/v2/api-group-users/#api-rest-api-2-user-get"
 
@@ -271,7 +273,7 @@ JiraPharoAPI >> getUser: accountId [
 	^ znClient get
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 JiraPharoAPI >> initialize [
 
 	super initialize.
@@ -285,13 +287,13 @@ JiraPharoAPI >> initialize [
 	self configureReaderForJiraUser: generalReader
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JiraPharoAPI >> isHttps [
 
 	^ https
 ]
 
-{ #category : #'api - issue' }
+{ #category : 'api - issue' }
 JiraPharoAPI >> issue: issueName [
 	"https://developer.atlassian.com/cloud/jira/platform/rest/v2/api-group-issues/#api-rest-api-2-issue-issueidorkey-get"
 
@@ -299,23 +301,25 @@ JiraPharoAPI >> issue: issueName [
 	znClient path: self basePath , '/issue/' , issueName.
 	self rawData ifFalse: [
 		znClient contentReader: [ :entity |
-			generalReader nextAs: JPIssue ] ].
+			generalReader
+				on: entity contents readStream;
+				nextAs: JPIssue ] ].
 	^ znClient get
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JiraPharoAPI >> port [
 
 	^ port
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JiraPharoAPI >> port: anObject [
 
 	port := anObject
 ]
 
-{ #category : #'private - building' }
+{ #category : 'private - building' }
 JiraPharoAPI >> prepareZnClient [
 
 	znClient := ZnClient new.
@@ -333,7 +337,7 @@ JiraPharoAPI >> prepareZnClient [
 			, (self user , ':' , self apiToken) utf8Encoded base64Encoded ]
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 JiraPharoAPI >> project: projectId [
 
 	self prepareZnClient.
@@ -349,19 +353,19 @@ JiraPharoAPI >> project: projectId [
 	^ znClient get
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JiraPharoAPI >> rawData [
 
 	^ rawData
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JiraPharoAPI >> rawData: anObject [
 
 	rawData := anObject
 ]
 
-{ #category : #'api - issue search' }
+{ #category : 'api - issue search' }
 JiraPharoAPI >> searchIssueWithExpand: expand fields: fields fieldsByKeys: fieldsByKeys jql: jql maxResults: maxResults startAt: startAt [
 	"https://developer.atlassian.com/cloud/jira/platform/rest/v2/api-group-issue-search/#api-rest-api-2-search-post"
 
@@ -387,13 +391,13 @@ JiraPharoAPI >> searchIssueWithExpand: expand fields: fields fieldsByKeys: field
 	^ znClient post
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JiraPharoAPI >> user [
 
 	^ user
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JiraPharoAPI >> user: anObject [
 
 	user := anObject

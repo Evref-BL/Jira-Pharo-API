@@ -10,28 +10,29 @@ I have few api endpoints.
 - `JiraPharoImporter>>#importAllCurrentAndPastIssuesOf:` to import issues **assigned** to one person, or that has been assigned to this person
 "
 Class {
-	#name : #JiraPharoImporter,
-	#superclass : #Object,
+	#name : 'JiraPharoImporter',
+	#superclass : 'Object',
 	#instVars : [
 		'model',
 		'api'
 	],
-	#category : #JiraPharoAPI
+	#category : 'JiraPharoAPI',
+	#package : 'JiraPharoAPI'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JiraPharoImporter >> api [
 
 	^ api
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JiraPharoImporter >> api: anObject [
 
 	api := anObject
 ]
 
-{ #category : #load }
+{ #category : 'load' }
 JiraPharoImporter >> ensureIssueType: aPotentialIssueType [
 	"Search is user is already in model"
 
@@ -41,7 +42,7 @@ JiraPharoImporter >> ensureIssueType: aPotentialIssueType [
 	^ self model add: aPotentialIssueType
 ]
 
-{ #category : #load }
+{ #category : 'load' }
 JiraPharoImporter >> ensureProject: aPotentialProject [
 	"Search is user is already in model"
 
@@ -51,7 +52,7 @@ JiraPharoImporter >> ensureProject: aPotentialProject [
 	^ self model add: aPotentialProject
 ]
 
-{ #category : #load }
+{ #category : 'load' }
 JiraPharoImporter >> ensureUser: aPotentialUser [
 	"Search is user is already in model"
 
@@ -61,7 +62,7 @@ JiraPharoImporter >> ensureUser: aPotentialUser [
 	^ self model add: aPotentialUser
 ]
 
-{ #category : #extraction }
+{ #category : 'extraction' }
 JiraPharoImporter >> extractAllIssuesFromQuery: jqlQuery [
 
 	| issues tmp itemByPage |
@@ -93,13 +94,13 @@ JiraPharoImporter >> extractAllIssuesFromQuery: jqlQuery [
 	^ issues
 ]
 
-{ #category : #extraction }
+{ #category : 'extraction' }
 JiraPharoImporter >> extractUserFromAccountID: accountId [
 
 	^ self api getUser: accountId
 ]
 
-{ #category : #'api - import' }
+{ #category : 'api - import' }
 JiraPharoImporter >> importAllCurrentAndPastIssuesOf: anEmail [
 
 	| possibleUsers modelUser issues |
@@ -112,7 +113,7 @@ JiraPharoImporter >> importAllCurrentAndPastIssuesOf: anEmail [
 	^ issues
 ]
 
-{ #category : #'api - import' }
+{ #category : 'api - import' }
 JiraPharoImporter >> importAllIssuesFromQuery: aQuery [
 
 	| issues |
@@ -120,7 +121,7 @@ JiraPharoImporter >> importAllIssuesFromQuery: aQuery [
 	^ self loadIssues: issues.
 ]
 
-{ #category : #'api - import' }
+{ #category : 'api - import' }
 JiraPharoImporter >> importAllIssuesOf: aUsername [
 
 	| jqlQuery |
@@ -132,7 +133,7 @@ JiraPharoImporter >> importAllIssuesOf: aUsername [
 	^ self importAllIssuesFromQuery: jqlQuery
 ]
 
-{ #category : #'api - import' }
+{ #category : 'api - import' }
 JiraPharoImporter >> importUserFromAccountID: anAccountID [
 
 	| potentialUser |
@@ -140,7 +141,7 @@ JiraPharoImporter >> importUserFromAccountID: anAccountID [
 	^ self ensureUser: potentialUser
 ]
 
-{ #category : #load }
+{ #category : 'load' }
 JiraPharoImporter >> loadAssigneeForIssuesToLoad: issuesToLoad [
 
 	issuesToLoad
@@ -149,7 +150,7 @@ JiraPharoImporter >> loadAssigneeForIssuesToLoad: issuesToLoad [
 		issue assignee: (self ensureUser: issue assignee) ]
 ]
 
-{ #category : #load }
+{ #category : 'load' }
 JiraPharoImporter >> loadCreatorForIssuesToLoad: issuesToLoad [
 
 	issuesToLoad
@@ -157,7 +158,7 @@ JiraPharoImporter >> loadCreatorForIssuesToLoad: issuesToLoad [
 		thenDo: [ :issue | issue creator: (self ensureUser: issue creator) ]
 ]
 
-{ #category : #load }
+{ #category : 'load' }
 JiraPharoImporter >> loadIssues: issues [
 
 	| issuesToLoad issuesToReturn |
@@ -179,7 +180,7 @@ JiraPharoImporter >> loadIssues: issues [
 	^ issuesToReturn
 ]
 
-{ #category : #load }
+{ #category : 'load' }
 JiraPharoImporter >> loadProjectForIssuesToLoad: issuesToLoad [
 
 	issuesToLoad
@@ -188,7 +189,7 @@ JiraPharoImporter >> loadProjectForIssuesToLoad: issuesToLoad [
 		issue project: (self ensureProject: issue project) ]
 ]
 
-{ #category : #load }
+{ #category : 'load' }
 JiraPharoImporter >> loadTypeForIssuesToLoad: issuesToLoad [
 
 	issuesToLoad
@@ -196,7 +197,7 @@ JiraPharoImporter >> loadTypeForIssuesToLoad: issuesToLoad [
 		thenDo: [ :issue | issue type: (self ensureIssueType: issue type) ]
 ]
 
-{ #category : #load }
+{ #category : 'load' }
 JiraPharoImporter >> loadWorklogsForIssuesToLoad: issuesToLoad [
 
 	| worklogsToLoad |
@@ -214,13 +215,13 @@ JiraPharoImporter >> loadWorklogsForIssuesToLoad: issuesToLoad [
 	self model addAll: worklogsToLoad
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JiraPharoImporter >> model [
 
 	^ model
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JiraPharoImporter >> model: anObject [
 
 	model := anObject

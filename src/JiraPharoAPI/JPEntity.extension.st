@@ -1,6 +1,6 @@
-Extension { #name : #JPEntity }
+Extension { #name : 'JPEntity' }
 
-{ #category : #'*JiraPharoAPI' }
+{ #category : '*JiraPharoAPI' }
 JPEntity class >> fromDictionary: aUserInDictionary [
 
 	| user |
