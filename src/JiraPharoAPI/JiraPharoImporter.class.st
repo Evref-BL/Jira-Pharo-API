@@ -133,6 +133,19 @@ JiraPharoImporter >> importAllIssuesOf: aUsername [
 	^ self importAllIssuesFromQuery: jqlQuery
 ]
 
+{ #category : 'api - issue' }
+JiraPharoImporter >> importIssue: aKeyOrId [
+	|issue|
+
+	aKeyOrId ifEmpty: [ ^ nil ].
+	issue := (self model allWithType: JPIssue) detect: [ :issue | issue id = aKeyOrId or: [ issue key = aKeyOrId 
+			 ] ] ifNone: [ 
+		self api issue: aKeyOrId. 
+		 ]. 
+	^ self model add: issue unless: [ :existing :new | existing id = new id ].
+
+]
+
 { #category : 'api - import' }
 JiraPharoImporter >> importUserFromAccountID: anAccountID [
 
