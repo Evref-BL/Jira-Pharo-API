@@ -166,12 +166,12 @@ JiraPharoImporter >> loadIssues: issues [
 	issuesToLoad := OrderedCollection new.
 	issues do: [ :issueProposedForImmport |
 		(self model allWithType: JPIssue)
-			detect: [ :issue | issue id = issueProposedForImmport id ]
+			detect: [ :issue |  issue id isNotNil and: [issue id = issueProposedForImmport id] ]
 			ifFound: [ :one | issuesToReturn add: one ]
 			ifNone: [
 				issuesToReturn add: issueProposedForImmport.
 				issuesToLoad add: issueProposedForImmport ] ].
-	self model addAll: issuesToLoad.
+	issuesToLoad:= self model addAll: issuesToLoad unless: [ :existing :new | existing id = new id ] .
 	self loadTypeForIssuesToLoad: issuesToLoad.
 	self loadWorklogsForIssuesToLoad: issuesToLoad.
 	self loadCreatorForIssuesToLoad: issuesToLoad.
