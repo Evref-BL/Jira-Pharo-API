@@ -114,6 +114,26 @@ JiraPharoImporterTest >> testImportIssue [
 ]
 
 { #category : 'tests' }
+JiraPharoImporterTest >> testImportIssueNoId [
+
+	|  |
+
+	self assert: (jpImporter importIssue: '') equals: nil
+]
+
+{ #category : 'tests' }
+JiraPharoImporterTest >> testImportIssueOnlyKey [
+
+	| issue |
+	issue := model newIssue
+		         id: '1';
+					key: '123'
+		         yourself.
+
+	self assert: (jpImporter importIssue: '123') equals: issue
+]
+
+{ #category : 'tests' }
 JiraPharoImporterTest >> testLoadAssigneeForIssuesToLoad [
 
 	| issue assignee |
