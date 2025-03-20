@@ -136,13 +136,15 @@ JiraPharoImporter >> importAllIssuesOf: aUsername [
 { #category : 'api - issue' }
 JiraPharoImporter >> importIssue: aKeyOrId [
 
-	(aKeyOrId isNil or: [aKeyOrId isEmpty]) ifTrue: [ ^ nil ].
+	(aKeyOrId isNil or: [ aKeyOrId isEmpty ]) ifTrue: [ ^ nil ].
 	^ (self model allWithType: JPIssue)
-		         detect: [ :modelIssue |
-		         modelIssue id = aKeyOrId or: [ modelIssue key = aKeyOrId ] ]
-		         ifNone: [ self model
-		  							add: (self api issue: aKeyOrId) ].
-	
+		  detect: [ :modelIssue |
+			  modelIssue id = aKeyOrId or: [ modelIssue key = aKeyOrId ] ]
+		  ifNone: [
+			  | issue |
+			  issue := self api issue: aKeyOrId.
+			  issue key ifNil: [ ^ nil ].
+			  self model add: issue ]
 ]
 
 { #category : 'api - import' }

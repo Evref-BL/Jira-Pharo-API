@@ -1,10 +1,11 @@
 Class {
-	#name : #BaselineOfJiraPharoAPI,
-	#superclass : #BaselineOf,
-	#category : #BaselineOfJiraPharoAPI
+	#name : 'BaselineOfJiraPharoAPI',
+	#superclass : 'BaselineOf',
+	#category : 'BaselineOfJiraPharoAPI',
+	#package : 'BaselineOfJiraPharoAPI'
 }
 
-{ #category : #baselines }
+{ #category : 'baselines' }
 BaselineOfJiraPharoAPI >> baseline: spec [
 
 	<baseline>
@@ -14,7 +15,7 @@ BaselineOfJiraPharoAPI >> baseline: spec [
 		self defineGroups: spec ]
 ]
 
-{ #category : #baselines }
+{ #category : 'baselines' }
 BaselineOfJiraPharoAPI >> defineDependencies: spec [
 
 	spec
@@ -22,25 +23,30 @@ BaselineOfJiraPharoAPI >> defineDependencies: spec [
 		with: [ spec repository: 'github://svenvc/NeoJSON/repository' ].
 	spec
 		baseline: 'MoreLogger'
-		with: [ spec repository: 'github://badetitou/MoreLogger:main/src' ]
+		with: [ spec repository: 'github://badetitou/MoreLogger:main/src' ].
+
+	spec
+		baseline: 'Mocketry'
+		with: [ spec repository: 'github://dionisiydk/Mocketry' ]
 ]
 
-{ #category : #baselines }
+{ #category : 'baselines' }
 BaselineOfJiraPharoAPI >> defineGroups: spec [
 ]
 
-{ #category : #baselines }
+{ #category : 'baselines' }
 BaselineOfJiraPharoAPI >> definePackages: spec [
 
 	spec
 		package: 'JiraPharoAPI'
-		with: [ spec requires: #( 'JiraPharoAPI-Model' 'NeoJSON' 'MoreLogger' ) ].
+		with: [
+		spec requires: #( 'JiraPharoAPI-Model' 'NeoJSON' 'MoreLogger' ) ].
 	spec package: 'JiraPharoAPI-Model'.
 	spec
 		package: 'JiraPharoAPI-Model-Extended'
 		with: [ spec requires: #( 'JiraPharoAPI-Model' ) ].
 	spec package: 'JiraPharoAPI-Model-Generator'.
-	spec
-		package: 'JiraPharoAPI-Tests'
-		with: [ spec requires: #( 'JiraPharoAPI' 'JiraPharoAPI-Model' ) ]
+	spec package: 'JiraPharoAPI-Tests' with: [
+		spec requires: #( 'JiraPharoAPI' 'JiraPharoAPI-Model'
+		   'Mocketry' ) ]
 ]

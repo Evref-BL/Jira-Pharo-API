@@ -134,6 +134,14 @@ JiraPharoImporterTest >> testImportIssueOnlyKey [
 ]
 
 { #category : 'tests' }
+JiraPharoImporterTest >> testImportWrongIssue [
+
+	jpImporter api: JiraPharoAPI new.
+	(jpImporter api stub issue: 'DO_NOT_EXIST') willReturn: NeoJSONObject new.
+	self assert: (jpImporter importIssue: 'DO_NOT_EXIST') equals: nil
+]
+
+{ #category : 'tests' }
 JiraPharoImporterTest >> testLoadAssigneeForIssuesToLoad [
 
 	| issue assignee |
