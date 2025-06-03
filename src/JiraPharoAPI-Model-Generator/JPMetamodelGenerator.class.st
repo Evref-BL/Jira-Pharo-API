@@ -1,30 +1,32 @@
 Class {
-	#name : #JPMetamodelGenerator,
-	#superclass : #FamixMetamodelGenerator,
+	#name : 'JPMetamodelGenerator',
+	#superclass : 'FamixMetamodelGenerator',
 	#instVars : [
 		'component',
 		'issue',
 		'issueType',
 		'project',
 		'worklog',
-		'user'
+		'user',
+		'version'
 	],
-	#category : #'JiraPharoAPI-Model-Generator'
+	#category : 'JiraPharoAPI-Model-Generator',
+	#package : 'JiraPharoAPI-Model-Generator'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JPMetamodelGenerator class >> packageName [
 
 	^ #'JiraPharoAPI-Model'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JPMetamodelGenerator class >> prefix [
 
 	^ #JP
 ]
 
-{ #category : #definition }
+{ #category : 'definition' }
 JPMetamodelGenerator >> defineClasses [
 
 	super defineClasses.
@@ -35,15 +37,16 @@ JPMetamodelGenerator >> defineClasses [
 	project := builder newClassNamed: 'Project'.
 	worklog := builder newClassNamed: 'Worklog'.
 	user := builder newClassNamed: 'User'.
+	version := builder newClassNamed: 'Version'.
 ]
 
-{ #category : #definition }
+{ #category : 'definition' }
 JPMetamodelGenerator >> defineHierarchy [
 
 	super defineHierarchy.
 ]
 
-{ #category : #definition }
+{ #category : 'definition' }
 JPMetamodelGenerator >> defineProperties [
 
 	super defineProperties.
@@ -88,10 +91,19 @@ JPMetamodelGenerator >> defineProperties [
 	user property: #emailAddress type: #String.
 	user property: #name type: #String.
 	user property: #accountType type: #String.
-	user withEqualityCheckOn: { #accountId }
+	user withEqualityCheckOn: { #accountId }.
+	
+	version property: #id type: #Number.
+	version property: #description type: #String.	
+	version property: #name type: #String.
+	version property: #archived type: #Boolean.
+	version property: #released type: #Boolean.
+	version property: #releasedDate type: #Object.
+	version property: #userReleased type: #Object.
+	version withEqualityCheckOn: { #id }
 ]
 
-{ #category : #definition }
+{ #category : 'definition' }
 JPMetamodelGenerator >> defineRelations [
 
 	super defineRelations.
@@ -101,5 +113,7 @@ JPMetamodelGenerator >> defineRelations [
 	(issue property: #creator) *-<> (user property: #createdIssues).
 	(issue property: #assignee) *-<> (user property: #issuesAssigned).
 	(issue property: #historicallyAssigned) *-* (user property: #onceAssignedIssues).
-	(issue property: #project) *-<> (project property: #issues)
+	(issue property: #project) *-<> (project property: #issues).
+	
+	(version property: #project) *-<> (project property: #versions)
 ]

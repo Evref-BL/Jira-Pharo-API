@@ -73,22 +73,13 @@ JiraPharoAPI class >> user: anObject [
 { #category : 'api' }
 JiraPharoAPI >> allProjects [
 
-	self prepareZnClient.
-	znClient path: self basePath , '/project/'.
-	self rawData ifFalse: [
-		znClient contentReader: [ :entity |
-			| reader |
-			reader := NeoJSONReader on: entity contents readStream.
-			reader
-				for: JPProject
-				do: [ :mapping | mapping mapInstVars: #( key id name ) ].
-			reader
-				for: #ArrayOfJiraPharoProjects
-				customDo: [ :mapping |
-				mapping listOfElementSchema: JPProject ].
+	self
+		deprecated: 'Use getAllProjects instead of current one'
+		on: '3 June 2025'
+		in:
+		'Pharo-12.0.0+SNAPSHOT.build.1567.sha.ee47bfdbe3db3390b952b3c0277d9d1f46162275 (64 Bit)'.
 
-			reader nextAs: #ArrayOfJiraPharoProjects ] ].
-	^ znClient get
+	^ self getAllProjects
 ]
 
 { #category : 'accessing' }
@@ -257,6 +248,16 @@ JiraPharoAPI >> configureReaderForJiraWorkload: reader [
 		customMapping listOfElementSchema: JPWorklog ]
 ]
 
+{ #category : 'api - issue search' }
+JiraPharoAPI >> configureReaderForProject: reader [
+
+	reader for: JPProject do: [ :mapping | mapping mapAllInstVars ].
+	reader
+		for: #ArrayOfJPProject
+		customDo: [ :customMapping |
+		customMapping listOfElementSchema: JPProject ]
+]
+
 { #category : 'accessing' }
 JiraPharoAPI >> endpoint [
 
@@ -308,6 +309,39 @@ JiraPharoAPI >> generalReader: anObject [
 	generalReader := anObject
 ]
 
+{ #category : 'api - projects' }
+JiraPharoAPI >> getAllProjects [
+
+	self prepareZnClient.
+	znClient path: self basePath , '/project/'.
+	
+		self rawData ifFalse: [
+		znClient contentReader: [ :entity |
+			generalReader
+				on: entity contents readStream;
+				nextAs: #ArrayOfJPProject ] ].
+	
+	^ znClient get
+]
+
+{ #category : 'api - projects' }
+JiraPharoAPI >> getProject: projectIdOrKey [
+
+	
+	self prepareZnClient.
+	
+	
+	znClient path: self basePath , '/project/', projectIdOrKey asString.
+	self rawData ifFalse: [
+		znClient contentReader: [ :entity |
+			generalReader
+				on: entity contents readStream;
+				nextAs: JPProject ] ].
+	
+
+	^ znClient get
+]
+
 { #category : 'api - user' }
 JiraPharoAPI >> getUser: accountId [
 	"https://developer.atlassian.com/cloud/jira/platform/rest/v2/api-group-users/#api-rest-api-2-user-get"
@@ -320,6 +354,23 @@ JiraPharoAPI >> getUser: accountId [
 			generalReader
 				on: entity contents readStream;
 				nextAs: JPUser ] ].
+	^ znClient get
+]
+
+{ #category : 'api - projects' }
+JiraPharoAPI >> getVersionsOfProject: projectIdOrKey [ 
+	
+	self prepareZnClient.
+	
+	
+	znClient path: self basePath , '/project/', projectIdOrKey asString, '/versions/'.
+	"self rawData ifFalse: [
+		znClient contentReader: [ :entity |
+			generalReader
+				on: entity contents readStream;
+				nextAs: JPProject ] ]."
+	
+
 	^ znClient get
 ]
 
@@ -336,7 +387,8 @@ JiraPharoAPI >> initialize [
 	generalReader := NeoJSONReader new.
 	self configureReaderForJiraIssue: generalReader.
 	self configureReaderForJiraWorkload: generalReader.
-	self configureReaderForJiraUser: generalReader
+	self configureReaderForJiraUser: generalReader.
+	self configureReaderForProject: generalReader.
 ]
 
 { #category : 'accessing' }
@@ -392,17 +444,14 @@ JiraPharoAPI >> prepareZnClient [
 { #category : 'api' }
 JiraPharoAPI >> project: projectId [
 
-	self prepareZnClient.
-	znClient path: self basePath , '/project/' , projectId asString.
-	self rawData ifFalse: [
-		znClient contentReader: [ :entity |
-			| reader |
-			reader := NeoJSONReader on: entity contents readStream.
-			reader
-				for: JPProject
-				do: [ :mapping | mapping mapInstVars: #( key id name ) ].
-			reader nextAs: JPProject ] ].
-	^ znClient get
+	self
+		deprecated: 'Use getProject: instead of current one'
+		on: '3 June 2025'
+		in:
+		'Pharo-12.0.0+SNAPSHOT.build.1567.sha.ee47bfdbe3db3390b952b3c0277d9d1f46162275 (64 Bit)'.
+
+
+	^ self getProject: projectId
 ]
 
 { #category : 'accessing' }
