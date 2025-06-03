@@ -6,6 +6,7 @@
 | Relation | Origin | Opposite | Type | Comment |
 |---|
 | `issues` | `JPProject` | `project` | `JPIssue` | |
+| `versions` | `JPProject` | `project` | `JPVersion` | |
 
 
 ## Properties
@@ -19,18 +20,21 @@
 
 "
 Class {
-	#name : #JPProject,
-	#superclass : #JPEntity,
+	#name : 'JPProject',
+	#superclass : 'JPEntity',
 	#instVars : [
 		'#id => FMProperty',
 		'#name => FMProperty',
 		'#key => FMProperty',
-		'#issues => FMMany type: #JPIssue opposite: #project'
+		'#issues => FMMany type: #JPIssue opposite: #project',
+		'#versions => FMMany type: #JPVersion opposite: #project'
 	],
-	#category : 'JiraPharoAPI-Model-Entities'
+	#category : 'JiraPharoAPI-Model-Entities',
+	#package : 'JiraPharoAPI-Model',
+	#tag : 'Entities'
 }
 
-{ #category : #meta }
+{ #category : 'meta' }
 JPProject class >> annotation [
 
 	<FMClass: #Project super: #JPEntity>
@@ -39,27 +43,33 @@ JPProject class >> annotation [
 	^ self
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 JPProject >> = aJPProject [
 
 	<generated>
 	^ aJPProject id = self id
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 JPProject >> addIssue: anObject [
 	<generated>
 	^ self issues add: anObject
 ]
 
-{ #category : #comparing }
+{ #category : 'adding' }
+JPProject >> addVersion: anObject [
+	<generated>
+	^ self versions add: anObject
+]
+
+{ #category : 'comparing' }
 JPProject >> hash [
 
 	<generated>
 	^ self id hash 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JPProject >> id [
 
 	<FMProperty: #id type: #Number>
@@ -67,13 +77,13 @@ JPProject >> id [
 	^ id
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JPProject >> id: anObject [
 	<generated>
 	id := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JPProject >> issues [
 	"Relation named: #issues type: #JPIssue opposite: #project"
 
@@ -82,21 +92,21 @@ JPProject >> issues [
 	^ issues
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JPProject >> issues: anObject [
 
 	<generated>
 	issues value: anObject
 ]
 
-{ #category : #navigation }
+{ #category : 'navigation' }
 JPProject >> issuesGroup [
 	<generated>
 	<navigation: 'Issues'>
 	^ MooseSpecializedGroup withAll: self issues asSet
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JPProject >> key [
 
 	<FMProperty: #key type: #String>
@@ -104,13 +114,13 @@ JPProject >> key [
 	^ key
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JPProject >> key: anObject [
 	<generated>
 	key := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JPProject >> name [
 
 	<FMProperty: #name type: #String>
@@ -118,8 +128,31 @@ JPProject >> name [
 	^ name
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 JPProject >> name: anObject [
 	<generated>
 	name := anObject
+]
+
+{ #category : 'accessing' }
+JPProject >> versions [
+	"Relation named: #versions type: #JPVersion opposite: #project"
+
+	<generated>
+	<derived>
+	^ versions
+]
+
+{ #category : 'accessing' }
+JPProject >> versions: anObject [
+
+	<generated>
+	versions value: anObject
+]
+
+{ #category : 'navigation' }
+JPProject >> versionsGroup [
+	<generated>
+	<navigation: 'Versions'>
+	^ MooseSpecializedGroup withAll: self versions asSet
 ]
