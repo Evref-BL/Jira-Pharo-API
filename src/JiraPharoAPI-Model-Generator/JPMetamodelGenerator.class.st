@@ -100,7 +100,7 @@ JPMetamodelGenerator >> defineProperties [
 	version property: #archived type: #Boolean.
 	version property: #released type: #Boolean.
 	version property: #releasedDate type: #Object.
-	version property: #userReleased type: #Object.
+	version property: #userReleasedDate type: #Object.
 	version property: #url type: #String. 
 	version withEqualityCheckOn: { #id }
 ]

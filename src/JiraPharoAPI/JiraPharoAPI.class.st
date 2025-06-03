@@ -258,6 +258,49 @@ JiraPharoAPI >> configureReaderForProject: reader [
 		customMapping listOfElementSchema: JPProject ]
 ]
 
+{ #category : 'api - issue search' }
+JiraPharoAPI >> configureReaderForVersion: reader [
+
+	reader mapInstVarsFor: JPVersion.
+
+	reader for: JPVersion do: [ :mapping | 
+		
+		mapping
+			mapProperty: #projectId
+			getter: [  ]
+			setter: [ :object :value |
+			object cacheAt: #projectId put: (value at: #projectId) ].
+	
+		mapping
+			mapProperty: #self
+			getter: [  ]
+			setter: [ :object :value |
+			object url: (value at: #self) ].
+		
+		mapping
+			mapProperty: #releasedDate
+			getter: [ :object | #ignore ]
+			setter: [ :object :value |
+			object releasedDate: (value ifNotNil: [DateAndTime fromString: value]).
+			].
+		 
+		mapping
+			mapProperty: #userReleasedDate
+			getter: [ :object | #ignore ]
+			setter: [ :object :value |
+			object userReleasedDate: (value ifNotNil: [DateAndTime fromString: value]).
+			]. 
+	
+	].
+	
+	
+	
+	reader
+		for: #ArrayOfJPVersions
+		customDo: [ :customMapping |
+		customMapping listOfElementSchema: JPVersion ]
+]
+
 { #category : 'accessing' }
 JiraPharoAPI >> endpoint [
 
@@ -364,12 +407,11 @@ JiraPharoAPI >> getVersionsOfProject: projectIdOrKey [
 	
 	
 	znClient path: self basePath , '/project/', projectIdOrKey asString, '/versions/'.
-	"self rawData ifFalse: [
+	self rawData ifFalse: [
 		znClient contentReader: [ :entity |
 			generalReader
 				on: entity contents readStream;
-				nextAs: JPProject ] ]."
-	
+				nextAs: #ArrayOfJPVersions ] ].
 
 	^ znClient get
 ]
@@ -389,6 +431,7 @@ JiraPharoAPI >> initialize [
 	self configureReaderForJiraWorkload: generalReader.
 	self configureReaderForJiraUser: generalReader.
 	self configureReaderForProject: generalReader.
+	self configureReaderForVersion: generalReader. 
 ]
 
 { #category : 'accessing' }
