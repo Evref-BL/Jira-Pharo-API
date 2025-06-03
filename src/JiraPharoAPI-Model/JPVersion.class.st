@@ -21,7 +21,7 @@
 | `released` | `Boolean` | nil | |
 | `releasedDate` | `Object` | nil | |
 | `url` | `String` | nil | |
-| `userReleased` | `Object` | nil | |
+| `userReleasedDate` | `Object` | nil | |
 
 "
 Class {
@@ -35,7 +35,7 @@ Class {
 		'#archived => FMProperty',
 		'#released => FMProperty',
 		'#releasedDate => FMProperty',
-		'#userReleased => FMProperty',
+		'#userReleasedDate => FMProperty',
 		'#url => FMProperty',
 		'#project => FMOne type: #JPProject opposite: #versions'
 	],
@@ -203,15 +203,15 @@ JPVersion >> url: anObject [
 ]
 
 { #category : 'accessing' }
-JPVersion >> userReleased [
+JPVersion >> userReleasedDate [
 
-	<FMProperty: #userReleased type: #Object>
+	<FMProperty: #userReleasedDate type: #Object>
 	<generated>
-	^ userReleased
+	^ userReleasedDate
 ]
 
 { #category : 'accessing' }
-JPVersion >> userReleased: anObject [
+JPVersion >> userReleasedDate: anObject [
 	<generated>
-	userReleased := anObject
+	userReleasedDate := anObject
 ]
