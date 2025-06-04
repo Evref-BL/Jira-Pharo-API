@@ -48,7 +48,7 @@ JiraPharoImporter >> ensureProject: aPotentialProject [
 
 	(self model allWithType: JPProject)
 		detect: [ :project | project = aPotentialProject ]
-		ifOne: [ :projectFromModel | ^ projectFromModel ].
+		ifFound: [ :projectFromModel | ^ projectFromModel ].
 	^ self model add: aPotentialProject
 ]
 
@@ -60,6 +60,16 @@ JiraPharoImporter >> ensureUser: aPotentialUser [
 		detect: [ :user | user = aPotentialUser ]
 		ifOne: [ :userFromModel | ^ userFromModel ].
 	^ self model add: aPotentialUser
+]
+
+{ #category : 'ensure' }
+JiraPharoImporter >> ensureVersion: aJPVersion [ 
+	"Search is version is already in model"
+
+	(self model allWithType: JPVersion )
+		detect: [ :v | v = aJPVersion ]
+		ifFound: [ :vFromModel | ^ vFromModel ].
+	^ self model add: aJPVersion
 ]
 
 { #category : 'extraction' }
@@ -147,12 +157,29 @@ JiraPharoImporter >> importIssue: aKeyOrId [
 			  self model add: issue ]
 ]
 
+{ #category : 'import - projects' }
+JiraPharoImporter >> importProject: projectIdOrName [ 
+	|project|
+	project := api getProject: projectIdOrName.
+	^ self ensureProject: project.
+]
+
 { #category : 'api - import' }
 JiraPharoImporter >> importUserFromAccountID: anAccountID [
 
 	| potentialUser |
 	potentialUser := self extractUserFromAccountID: anAccountID.
 	^ self ensureUser: potentialUser
+]
+
+{ #category : 'import - version' }
+JiraPharoImporter >> importVersionsOfProject: aJPProject [ 
+	|versions|
+	versions := api getVersionsOfProject: aJPProject id.
+	
+	versions  := versions collect: [:v | self ensureVersion:v].
+	versions do: [ :v | v project: aJPProject ].
+	^ versions. 
 ]
 
 { #category : 'load' }

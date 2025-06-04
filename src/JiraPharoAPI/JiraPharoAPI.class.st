@@ -269,13 +269,13 @@ JiraPharoAPI >> configureReaderForVersion: reader [
 			mapProperty: #projectId
 			getter: [  ]
 			setter: [ :object :value |
-			object cacheAt: #projectId put: (value at: #projectId) ].
+			object cacheAt: #projectId put: (value) ].
 	
 		mapping
 			mapProperty: #self
 			getter: [  ]
 			setter: [ :object :value |
-			object url: (value at: #self) ].
+			object url: (value) ].
 		
 		mapping
 			mapProperty: #releasedDate
@@ -367,6 +367,13 @@ JiraPharoAPI >> getAllProjects [
 	^ znClient get
 ]
 
+{ #category : 'api - version' }
+JiraPharoAPI >> getIssuesOfVersion: versionId forProject: projectIdOrName [ 
+	|jql|
+	jql := 'project=', projectIdOrName asString, ' AND fixVersion=', versionId asString.
+	^ (self searchIssueWithExpand: nil fields: nil fieldsByKeys: nil  jql: jql maxResults: 100  startAt: 0) issues
+]
+
 { #category : 'api - projects' }
 JiraPharoAPI >> getProject: projectIdOrKey [
 
@@ -381,6 +388,22 @@ JiraPharoAPI >> getProject: projectIdOrKey [
 				on: entity contents readStream;
 				nextAs: JPProject ] ].
 	
+
+	^ znClient get
+]
+
+{ #category : 'api - projects' }
+JiraPharoAPI >> getRelatedWorkForVersion: versionIdOrKey [ 
+	
+	self prepareZnClient.
+	
+	
+	znClient path: self basePath , '/version/', versionIdOrKey asString, '/relatedwork/'.
+	"self rawData ifFalse: [
+		znClient contentReader: [ :entity |
+			generalReader
+				on: entity contents readStream;
+				nextAs: #ArrayOfJPVersions ] ]."
 
 	^ znClient get
 ]

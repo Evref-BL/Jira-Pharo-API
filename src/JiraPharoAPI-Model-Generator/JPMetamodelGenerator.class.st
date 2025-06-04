@@ -117,5 +117,5 @@ JPMetamodelGenerator >> defineRelations [
 	(issue property: #historicallyAssigned) *-* (user property: #onceAssignedIssues).
 	(issue property: #project) *-<> (project property: #issues).
 	
-	(version property: #project) *-<> (project property: #versions)
+	(project property: #versions) <>-* (version property: #project)  
 ]

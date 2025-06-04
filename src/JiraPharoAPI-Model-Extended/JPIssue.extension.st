@@ -1,6 +1,6 @@
-Extension { #name : #JPIssue }
+Extension { #name : 'JPIssue' }
 
-{ #category : #'*JiraPharoAPI-Model-Extended' }
+{ #category : '*JiraPharoAPI-Model-Extended' }
 JPIssue >> mooseNameOn: aStream [
 
 	aStream
@@ -10,7 +10,7 @@ JPIssue >> mooseNameOn: aStream [
 		nextPutAll: (self summary ifNil: [ 'no summary' ])
 ]
 
-{ #category : #'*JiraPharoAPI-Model-Extended' }
+{ #category : '*JiraPharoAPI-Model-Extended' }
 JPIssue >> printOn: aStream [
 
 	aStream
