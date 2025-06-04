@@ -33,8 +33,18 @@ JiraPharoImporter >> api: anObject [
 ]
 
 { #category : 'load' }
+JiraPharoImporter >> ensureIssue: aPotentialIssue [
+	"Search is issue is already in model"
+
+	(self model allWithType: JPIssue)
+		detect: [ :issue | issue = aPotentialIssue ]
+		ifOne: [ :issueFromModel | ^ issueFromModel ].
+	^ self model add: aPotentialIssue
+]
+
+{ #category : 'load' }
 JiraPharoImporter >> ensureIssueType: aPotentialIssueType [
-	"Search is user is already in model"
+	"Search is issueType is already in model"
 
 	(self model allWithType: JPIssueType)
 		detect: [ :issueType | issueType = aPotentialIssueType ]
@@ -49,7 +59,8 @@ JiraPharoImporter >> ensureProject: aPotentialProject [
 	(self model allWithType: JPProject)
 		detect: [ :project | project = aPotentialProject ]
 		ifFound: [ :projectFromModel | ^ projectFromModel ].
-	^ self model add: aPotentialProject
+	self model add: aPotentialProject.
+	^ aPotentialProject.
 ]
 
 { #category : 'load' }
@@ -65,7 +76,7 @@ JiraPharoImporter >> ensureUser: aPotentialUser [
 { #category : 'ensure' }
 JiraPharoImporter >> ensureVersion: aJPVersion [ 
 	"Search is version is already in model"
-
+	 
 	(self model allWithType: JPVersion )
 		detect: [ :v | v = aJPVersion ]
 		ifFound: [ :vFromModel | ^ vFromModel ].
@@ -157,6 +168,18 @@ JiraPharoImporter >> importIssue: aKeyOrId [
 			  self model add: issue ]
 ]
 
+{ #category : 'import - issues' }
+JiraPharoImporter >> importIssuesOfVersionsForProject: aJPProject [ 
+	
+	aJPProject versions do: [ :v |
+		|foundIssues|
+		1 halt. 
+		foundIssues := api getIssuesOfVersion: v name forProject: aJPProject id.
+		foundIssues := foundIssues collect: [ :issue | self ensureIssue: issue].
+		 ]
+		
+]
+
 { #category : 'import - projects' }
 JiraPharoImporter >> importProject: projectIdOrName [ 
 	|project|
@@ -175,10 +198,10 @@ JiraPharoImporter >> importUserFromAccountID: anAccountID [
 { #category : 'import - version' }
 JiraPharoImporter >> importVersionsOfProject: aJPProject [ 
 	|versions|
+	1 halt. 
 	versions := api getVersionsOfProject: aJPProject id.
-	
 	versions  := versions collect: [:v | self ensureVersion:v].
-	versions do: [ :v | v project: aJPProject ].
+	versions do: [ :v | aJPProject versions add: v ].
 	^ versions. 
 ]
 

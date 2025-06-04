@@ -251,7 +251,12 @@ JiraPharoAPI >> configureReaderForJiraWorkload: reader [
 { #category : 'api - issue search' }
 JiraPharoAPI >> configureReaderForProject: reader [
 
-	reader for: JPProject do: [ :mapping | mapping mapAllInstVars ].
+	reader for: JPProject do: [ :mapping |
+			mapping mapAllInstVars.
+		 (mapping mapInstVar: #versions) valueSchema: #ArrayOfJPVersions.
+		  
+		
+		   ].
 	reader
 		for: #ArrayOfJPProject
 		customDo: [ :customMapping |
@@ -377,7 +382,7 @@ JiraPharoAPI >> getIssuesOfVersion: versionId forProject: projectIdOrName [
 { #category : 'api - projects' }
 JiraPharoAPI >> getProject: projectIdOrKey [
 
-	
+
 	self prepareZnClient.
 	
 	
