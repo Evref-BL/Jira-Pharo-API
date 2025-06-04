@@ -7,6 +7,11 @@
 |---|
 | `project` | `JPVersion` | `versions` | `JPProject` | |
 
+### Children
+| Relation | Origin | Opposite | Type | Comment |
+|---|
+| `issues` | `JPVersion` | `version` | `JPIssue` | |
+
 
 ## Properties
 ======================
@@ -37,7 +42,8 @@ Class {
 		'#releasedDate => FMProperty',
 		'#userReleasedDate => FMProperty',
 		'#url => FMProperty',
-		'#project => FMOne type: #JPProject opposite: #versions'
+		'#project => FMOne type: #JPProject opposite: #versions',
+		'#issues => FMMany type: #JPIssue opposite: #version'
 	],
 	#category : 'JiraPharoAPI-Model-Entities',
 	#package : 'JiraPharoAPI-Model',
@@ -58,6 +64,12 @@ JPVersion >> = aJPVersion [
 
 	<generated>
 	^ aJPVersion id = self id
+]
+
+{ #category : 'adding' }
+JPVersion >> addIssue: anObject [
+	<generated>
+	^ self issues add: anObject
 ]
 
 { #category : 'accessing' }
@@ -107,6 +119,29 @@ JPVersion >> id [
 JPVersion >> id: anObject [
 	<generated>
 	id := anObject
+]
+
+{ #category : 'accessing' }
+JPVersion >> issues [
+	"Relation named: #issues type: #JPIssue opposite: #version"
+
+	<generated>
+	<derived>
+	^ issues
+]
+
+{ #category : 'accessing' }
+JPVersion >> issues: anObject [
+
+	<generated>
+	issues value: anObject
+]
+
+{ #category : 'navigation' }
+JPVersion >> issuesGroup [
+	<generated>
+	<navigation: 'Issues'>
+	^ MooseSpecializedGroup withAll: self issues asSet
 ]
 
 { #category : 'accessing' }

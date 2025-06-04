@@ -8,6 +8,7 @@
 | `assignee` | `JPIssue` | `issuesAssigned` | `JPUser` | |
 | `creator` | `JPIssue` | `createdIssues` | `JPUser` | |
 | `project` | `JPIssue` | `issues` | `JPProject` | |
+| `version` | `JPIssue` | `issues` | `JPVersion` | |
 
 ### Other
 | Relation | Origin | Opposite | Type | Comment |
@@ -54,7 +55,8 @@ Class {
 		'#creator => FMOne type: #JPUser opposite: #createdIssues',
 		'#assignee => FMOne type: #JPUser opposite: #issuesAssigned',
 		'#historicallyAssigned => FMMany type: #JPUser opposite: #onceAssignedIssues',
-		'#project => FMOne type: #JPProject opposite: #issues'
+		'#project => FMOne type: #JPProject opposite: #issues',
+		'#version => FMOne type: #JPVersion opposite: #issues'
 	],
 	#category : 'JiraPharoAPI-Model-Entities',
 	#package : 'JiraPharoAPI-Model',
@@ -328,6 +330,29 @@ JPIssue >> type: anObject [
 
 	<generated>
 	type := anObject
+]
+
+{ #category : 'accessing' }
+JPIssue >> version [
+	"Relation named: #version type: #JPVersion opposite: #issues"
+
+	<generated>
+	<container>
+	^ version
+]
+
+{ #category : 'accessing' }
+JPIssue >> version: anObject [
+
+	<generated>
+	version := anObject
+]
+
+{ #category : 'navigation' }
+JPIssue >> versionGroup [
+	<generated>
+	<navigation: 'Version'>
+	^ MooseSpecializedGroup with: self version
 ]
 
 { #category : 'accessing' }
