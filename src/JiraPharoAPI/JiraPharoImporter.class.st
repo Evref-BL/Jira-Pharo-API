@@ -38,7 +38,7 @@ JiraPharoImporter >> ensureIssue: aPotentialIssue [
 
 	(self model allWithType: JPIssue)
 		detect: [ :issue | issue = aPotentialIssue ]
-		ifOne: [ :issueFromModel | ^ issueFromModel ].
+		ifFound: [ :issueFromModel | ^ issueFromModel ].
 	^ self model add: aPotentialIssue
 ]
 
@@ -169,15 +169,22 @@ JiraPharoImporter >> importIssue: aKeyOrId [
 ]
 
 { #category : 'import - issues' }
-JiraPharoImporter >> importIssuesOfVersionsForProject: aJPProject [ 
-	
+JiraPharoImporter >> importIssuesOfProject: aJPProject withinVersion: v [
+
+	| foundIssues |
+	foundIssues := api
+		               getIssuesOfVersion: v name
+		               forProject: aJPProject id.
+	foundIssues := foundIssues collect: [ :issue |
+		               self ensureIssue: issue ].
+	^ v issues: foundIssues
+]
+
+{ #category : 'import - issues' }
+JiraPharoImporter >> importIssuesOfVersionsForProject: aJPProject [
+
 	aJPProject versions do: [ :v |
-		|foundIssues|
-		1 halt. 
-		foundIssues := api getIssuesOfVersion: v name forProject: aJPProject id.
-		foundIssues := foundIssues collect: [ :issue | self ensureIssue: issue].
-		 ]
-		
+		self importIssuesOfProject: aJPProject withinVersion: v ]
 ]
 
 { #category : 'import - projects' }
