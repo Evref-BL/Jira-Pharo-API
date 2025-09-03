@@ -38,7 +38,7 @@ JiraPharoImporter >> ensureIssueType: aPotentialIssueType [
 
 	(self model allWithType: JPIssueType)
 		detect: [ :issueType | issueType = aPotentialIssueType ]
-		ifOne: [ :issueTypeFromModel | ^ issueTypeFromModel ].
+		ifFound: [ :issueTypeFromModel | ^ issueTypeFromModel ].
 	^ self model add: aPotentialIssueType
 ]
 
@@ -48,7 +48,7 @@ JiraPharoImporter >> ensureProject: aPotentialProject [
 
 	(self model allWithType: JPProject)
 		detect: [ :project | project = aPotentialProject ]
-		ifOne: [ :projectFromModel | ^ projectFromModel ].
+		ifFound: [ :projectFromModel | ^ projectFromModel ].
 	^ self model add: aPotentialProject
 ]
 
@@ -58,7 +58,7 @@ JiraPharoImporter >> ensureUser: aPotentialUser [
 
 	(self model allWithType: JPUser)
 		detect: [ :user | user = aPotentialUser ]
-		ifOne: [ :userFromModel | ^ userFromModel ].
+		ifFound: [ :userFromModel | ^ userFromModel ].
 	^ self model add: aPotentialUser
 ]
 
@@ -77,19 +77,20 @@ JiraPharoImporter >> extractAllIssuesFromQuery: jqlQuery [
 		       fieldsByKeys: nil
 		       jql: jqlQuery
 		       maxResults: itemByPage
-		       startAt: 0.
-
+		       nextPageToken: nil
+		       properties: nil
+		       reconcileIssues: nil.
 	issues addAll: tmp issues.
-	[ tmp issues size = itemByPage ] whileTrue: [
-		('Extract issues from ' , issues size printString , ' to '
-		 , (issues size + itemByPage) printString) recordInfo.
+	[ tmp isLast ] whileFalse: [
 		tmp := self api
 			       searchIssueWithExpand: nil
 			       fields: { '*all' }
 			       fieldsByKeys: nil
 			       jql: jqlQuery
 			       maxResults: itemByPage
-			       startAt: issues size.
+			       nextPageToken: tmp nextPageToken
+			       properties: nil
+			       reconcileIssues: nil.
 		issues addAll: tmp issues ].
 	^ issues
 ]
@@ -226,7 +227,7 @@ JiraPharoImporter >> loadWorklogsForIssuesToLoad: issuesToLoad [
 	worklogsToLoad do: [ :workload |
 		(self model allWithType: JPIssue)
 			detect: [ :issue | issue id = workload issue id ]
-			ifOne: [ :issue | workload issue: issue ] ].
+			ifFound: [ :issue | workload issue: issue ] ].
 	self model addAll: worklogsToLoad
 ]
 

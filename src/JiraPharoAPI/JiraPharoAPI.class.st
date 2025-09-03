@@ -146,9 +146,10 @@ JiraPharoAPI >> configureReaderForJiraIssue: reader [
 		for: #ArrayOfJiraPharoIssues
 		customDo: [ :mapping | mapping listOfElementSchema: JPIssue ].
 
-	reader for: JiraPharoIssueSearchResult do: [ :mapping |
-		mapping mapInstVars: #( expand startAt maxResults total ).
+	reader for: JiraPharoIssueEnhancedSearchResult do: [ :mapping |
+		mapping mapInstVars: #( isLast names nextPageToken schema ).
 		(mapping mapInstVar: #issues) valueSchema: #ArrayOfJiraPharoIssues ].
+	
 	reader for: JPIssue do: [ :mapping |
 		mapping mapInstVars: #( key id ).
 
@@ -418,10 +419,40 @@ JiraPharoAPI >> rawData: anObject [
 ]
 
 { #category : 'api - issue search' }
+JiraPharoAPI >> searchIssueWithExpand: expand fields: fields fieldsByKeys: fieldsByKeys jql: jql maxResults: maxResults nextPageToken: aPageToken properties: aCollectionOfProperties reconcileIssues: aListOfCollectionIssuesId [
+	"https://developer.atlassian.com/cloud/jira/platform/rest/v2/api-group-issue-search/#api-rest-api-2-search-post"
+
+	| dic |
+	self prepareZnClient.
+	znClient path: self basePath , '/search/jql'.
+	dic := Dictionary new.
+	expand ifNotNil: [ :e | dic at: #expand put: e ].
+	fields ifNotNil: [ :e | dic at: #fields put: e ].
+	fieldsByKeys ifNotNil: [ :e | dic at: #fieldsByKeys put: e ].
+	jql ifNotNil: [ :e | dic at: #jql put: e ].
+	maxResults ifNotNil: [ :e | dic at: #maxResults put: e ].
+	aPageToken ifNotNil: [ :e | dic at: #nextPageToken put: e ].
+	aCollectionOfProperties ifNotNil: [ :e | dic at: #properties put: e ].
+	aListOfCollectionIssuesId ifNotNil: [ :e | dic at: #reconcileIssues put: e ].
+	
+	self rawData ifFalse: [
+		znClient contentReader: [ :entity |
+			generalReader
+				on: entity contents readStream;
+				nextAs: JiraPharoIssueEnhancedSearchResult ] ].
+
+	znClient contents: dic.
+	^ znClient post
+]
+
+{ #category : 'api - issue search' }
 JiraPharoAPI >> searchIssueWithExpand: expand fields: fields fieldsByKeys: fieldsByKeys jql: jql maxResults: maxResults startAt: startAt [
 	"https://developer.atlassian.com/cloud/jira/platform/rest/v2/api-group-issue-search/#api-rest-api-2-search-post"
 
 	| dic |
+	self deprecated:
+		'Deprecated by Atlassian https://developer.atlassian.com/changelog/#CHANGE-2046.
+		Consider using `searchIssueWithExpand:fields:fieldsByKeys:jql:maxResults:nextPageToken:properties:reconcileIssues:`'.
 	self prepareZnClient.
 	znClient path: self basePath , '/search'.
 	dic := Dictionary new.
