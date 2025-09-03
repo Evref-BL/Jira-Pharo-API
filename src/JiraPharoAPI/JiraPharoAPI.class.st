@@ -204,7 +204,7 @@ JiraPharoAPI >> configureReaderForJiraIssue: reader [
 				value
 					at: #created
 					ifPresent: [ :dateString |
-					pharoIssue created: (Date fromString: dateString) ].
+					pharoIssue created: (DateAndTime fromString: dateString) ].
 				value at: #components ifPresent: [ :cmps |
 					pharoIssue components: (cmps collect: [ :cmp |
 							 | localComponent |
