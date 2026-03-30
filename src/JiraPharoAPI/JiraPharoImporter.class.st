@@ -66,7 +66,7 @@ JiraPharoImporter >> ensureUser: aPotentialUser [
 JiraPharoImporter >> extractAllIssuesFromQuery: jqlQuery [
 
 	| issues tmp itemByPage |
-	itemByPage := 100.
+	itemByPage := 50.
 	('Extract all issues from query ' , jqlQuery) recordInfo.
 	issues := OrderedCollection new.
 	('Extract issues from ' , issues size printString , ' to '
