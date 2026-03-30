@@ -115,6 +115,19 @@ JiraPharoImporter >> importAllCurrentAndPastIssuesOf: anEmail [
 ]
 
 { #category : 'api - import' }
+JiraPharoImporter >> importAllIssues: aCollectionOfIssueKey [
+
+	| jqlQuery |
+	jqlQuery := String streamContents: [ :stream |
+		            stream << 'key IN ('.
+		            aCollectionOfIssueKey
+			            do: [ :key | stream << key ]
+			            separatedBy: [ stream << ', ' ].
+		            stream << ')' ].
+	^ self importAllIssuesFromQuery: jqlQuery
+]
+
+{ #category : 'api - import' }
 JiraPharoImporter >> importAllIssuesFromQuery: aQuery [
 
 	| issues |
