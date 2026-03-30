@@ -118,6 +118,7 @@ JiraPharoImporter >> importAllCurrentAndPastIssuesOf: anEmail [
 JiraPharoImporter >> importAllIssues: aCollectionOfIssueKey [
 
 	| jqlQuery |
+	aCollectionOfIssueKey ifEmpty: [ ^ {  } ].
 	jqlQuery := String streamContents: [ :stream |
 		            stream << 'key IN ('.
 		            aCollectionOfIssueKey
